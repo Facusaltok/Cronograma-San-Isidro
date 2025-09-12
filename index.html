@@ -18,6 +18,7 @@
             --morning: #e3f2fd;
             --night: #e8eaf6;
             --special: #e8f5e9;
+            --refuerzo: #fff3e0;
             --border: #dee2e6;
         }
         
@@ -184,6 +185,49 @@
             display: block;
         }
         
+        .sub-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            background-color: var(--light);
+            padding: 0 10px;
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .sub-tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dark);
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .sub-tab:hover {
+            color: var(--secondary);
+        }
+        
+        .sub-tab.active {
+            color: var(--secondary);
+            border-bottom-color: var(--secondary);
+            background-color: white;
+            margin: 0 -10px;
+            padding: 8px 26px;
+        }
+        
+        .sub-tab-content {
+            display: none;
+        }
+        
+        .sub-tab-content.active {
+            display: block;
+        }
+        
         .table-container {
             overflow-x: auto;
             margin-bottom: 20px;
@@ -229,6 +273,10 @@
         
         .turno-especial {
             background-color: var(--special);
+        }
+        
+        .turno-refuerzo {
+            background-color: var(--refuerzo);
         }
         
         .editable {
@@ -351,6 +399,22 @@
             border: 1px dashed var(--secondary);
         }
         
+        .turno-subheader {
+            background-color: #f1f3f5;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--dark);
+        }
+        
+        .custodia-header {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 8px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 margin: 5px;
@@ -383,6 +447,15 @@
             .tab {
                 padding: 8px 12px;
                 font-size: 0.85rem;
+            }
+            
+            .sub-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .sub-tab {
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
             
             th, td {
@@ -431,7 +504,8 @@
                     <div><strong>AMT:</strong> 08:00 - 20:00</div>
                 </div>
                 <div class="legend-item">
-                    <div><br></div>
+                    <div class="color-box" style="background-color: var(--refuerzo);"></div>
+                    <div><strong>Choferes:</strong> Custodia</div>
                 </div>
                 <div class="legend-item">
                     <div><br></div>
@@ -451,6 +525,7 @@
         <div class="content" id="content-to-export">
             <div class="tabs">
                 <button class="tab active" onclick="openTab(event, 'turnos')">Turnos Diarios</button>
+                <button class="tab" onclick="openTab(event, 'choferes')">Choferes Custodia</button>
                 <button class="tab" onclick="openTab(event, 'personal')">Detalles por Personal</button>
                 <button class="tab" onclick="openTab(event, 'resumen')">Resumen de Cobertura</button>
             </div>
@@ -464,11 +539,44 @@
                     <table id="turnos-table">
                         <thead>
                             <tr>
-                                <th>Día</th>
-                                <th>Fecha</th>
-                                <th>Turno Mañana (07:00-19:00)</th>
-                                <th>Turno Noche (19:00-07:00)</th>
-                                <th>amt (08:00-20:00)</th>
+                                <th rowspan="2">Día</th>
+                                <th rowspan="2">Fecha</th>
+                                <th colspan="2" style="text-align: center;">Turno Mañana (07:00-19:00)</th>
+                                <th colspan="2" style="text-align: center;">Turno Noche (19:00-07:00)</th>
+                                <th rowspan="2">amt (08:00-20:00)</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente desde JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="choferes" class="tab-content">
+                <div class="alert alert-warning">
+                    <strong>Atención:</strong> Verificar asignaciones de choferes para las 4 custodias.
+                </div>
+                
+                <div class="table-container">
+                    <table id="choferes-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Día</th>
+                                <th rowspan="2">Fecha</th>
+                                <th colspan="4" style="text-align: center;">CUSTODIAS</th>
+                            </tr>
+                            <tr>
+                                <th class="custodia-header">CUSTODIA 1<br>(SRA. AMALIA)</th>
+                                <th class="custodia-header">CUSTODIA 2<br>(ISABELLA)</th>
+                                <th class="custodia-header">CUSTODIA 3<br>(ANGELINA)</th>
+                                <th class="custodia-header">CUSTODIA 4<br>(VALENTINO)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -479,21 +587,47 @@
             </div>
             
             <div id="personal" class="tab-content">
-                <div class="table-container">
-                    <table id="personal-table">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Jerarquía</th>
-                                <th>ORDINARIO</th>
-                                <th>Disponibilidad</th>
-                                <th>OBSERVACIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Los datos se cargarán dinámicamente desde JavaScript -->
-                        </tbody>
-                    </table>
+                <div class="sub-tabs">
+                    <button class="sub-tab active" onclick="openSubTab(event, 'personal-cabina')">Personal Cabina y AMT</button>
+                    <button class="sub-tab" onclick="openSubTab(event, 'personal-choferes')">Personal Choferes Custodia</button>
+                </div>
+                
+                <div id="personal-cabina" class="sub-tab-content active">
+                    <div class="table-container">
+                        <table id="personal-cabina-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Jerarquía</th>
+                                    <th>ORDINARIO</th>
+                                    <th>Disponibilidad</th>
+                                    <th>OBSERVACIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los datos se cargarán dinámicamente desde JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="personal-choferes" class="sub-tab-content">
+                    <div class="table-container">
+                        <table id="personal-choferes-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Jerarquía</th>
+                                    <th>ORDINARIO</th>
+                                    <th>Disponibilidad</th>
+                                    <th>OBSERVACIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los datos se cargarán dinámicamente desde JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             
@@ -553,246 +687,549 @@
             {
                 dia: "Lunes",
                 fecha: 1,
-                mañana: "SEQUEIRA, LOVERA",
-                noche: "OJEDA, ORTIZ",
+                mañana1: "SEQUEIRA",
+                mañana2: "LOVERA",
+                noche1: "OJEDA",
+                noche2: "ORTIZ",
                 especial: "LOBO",
                 supervisor: "SCARSO"
             },
             {
                 dia: "Martes",
                 fecha: 2,
-                mañana: "SCARSO, RODRIGUEZ",
-                noche: "VEIGA, VIZGARRA",
+                mañana1: "SCARSO",
+                mañana2: "RODRIGUEZ",
+                noche1: "VEIGA",
+                noche2: "VIZGARRA",
                 especial: "ATENCIO, CIRIGLIANO",
                 supervisor: "LOBO"
             },
             {
                 dia: "Miércoles",
                 fecha: 3,
-                mañana: "COCUCCI, LOVERA",
-                noche: "MANSILLA, ORTIZ",
+                mañana1: "COCUCCI",
+                mañana2: "LOVERA",
+                noche1: "MANSILLA",
+                noche2: "ORTIZ",
                 especial: "DE LEONIBUS",
                 supervisor: "VIZGARRA"
             },
             {
                 dia: "Jueves",
                 fecha: 4,
-                mañana: "SEQUEIRA, ATENCIO",
-                noche: "OJEDA, RODRIGUEZ",
+                mañana1: "SEQUEIRA",
+                mañana2: "ATENCIO",
+                noche1: "OJEDA",
+                noche2: "RODRIGUEZ",
                 especial: "LOBO, CIRIGLIANO",
                 supervisor: "LOPEZ"
             },
             {
                 dia: "Viernes",
                 fecha: 5,
-                mañana: "VEIGA, LOVERA",
-                noche: "COCUCCI, OJEDA",
+                mañana1: "VEIGA",
+                mañana2: "LOVERA",
+                noche1: "COCUCCI",
+                noche2: "OJEDA",
                 especial: "GONZALEZ L",
                 supervisor: "DE LEONIBUS"
             },
             {
                 dia: "Sábado",
                 fecha: 6,
-                mañana: "VIZGARRA, MANSILLA",
-                noche: "VEIGA",
+                mañana1: "VIZGARRA",
+                mañana2: "MANSILLA",
+                noche1: "VEIGA",
+                noche2: "",
                 especial: "DE LEONIBUS",
                 supervisor: "SEQUEIRA"
             },
             {
                 dia: "Domingo",
                 fecha: 7,
-                mañana: "VIZGARRA, COCUCCI",
-                noche: "OJEDA, RODRIGUEZ",
+                mañana1: "VIZGARRA",
+                mañana2: "COCUCCI",
+                noche1: "OJEDA",
+                noche2: "RODRIGUEZ",
                 especial: "LOBO",
                 supervisor: "MANSILLA"
             },
             {
                 dia: "Lunes",
                 fecha: 8,
-                mañana: "SEQUEIRA, SCARSO",
-                noche: "VEIGA, LOPEZ",
+                mañana1: "SEQUEIRA",
+                mañana2: "SCARSO",
+                noche1: "VEIGA",
+                noche2: "LOPEZ",
                 especial: "ATENCIO, CIRIGLIANO",
                 supervisor: "CIRIGLIANO"
             },
             {
                 dia: "Martes",
                 fecha: 9,
-                mañana: "COCUCCI, LOVERA",
-                noche: "MANSILLA, ORTIZ",
+                mañana1: "COCUCCI",
+                mañana2: "LOVERA",
+                noche1: "MANSILLA",
+                noche2: "ORTIZ",
                 especial: "DE LEONIBUS",
                 supervisor: "RODRIGUEZ"
             },
             {
                 dia: "Miércoles",
                 fecha: 10,
-                mañana: "SCARSO, SEQUEIRA",
-                noche: "LOPEZ, RODRIGUEZ",
+                mañana1: "SCARSO",
+                mañana2: "SEQUEIRA",
+                noche1: "LOPEZ",
+                noche2: "RODRIGUEZ",
                 especial: "LOBO, CIRIGLIANO",
                 supervisor: "COCUCCI"
             },
             {
                 dia: "Jueves",
                 fecha: 11,
-                mañana: "COCUCCI, VEIGA",
-                noche: "VIZGARRA, ORTIZ",
+                mañana1: "COCUCCI",
+                mañana2: "VEIGA",
+                noche1: "VIZGARRA",
+                noche2: "ORTIZ",
                 especial: "GONZALEZ L",
                 supervisor: "OJEDA"
             },
             {
                 dia: "Viernes",
                 fecha: 12,
-                mañana: "ATENCIO, MANSILLA",
-                noche: "ALEGRE, VEIGA",
+                mañana1: "ATENCIO",
+                mañana2: "MANSILLA",
+                noche1: "ALEGRE",
+                noche2: "VEIGA",
                 especial: "DE LEONIBUS, CIRIGLIANO",
                 supervisor: "VEIGA"
             },
             {
                 dia: "Sábado",
                 fecha: 13,
-                mañana: "SEQUEIRA, VIZGARRA",
-                noche: "RODRIGUEZ, LOPEZ",
+                mañana1: "SEQUEIRA",
+                mañana2: "VIZGARRA",
+                noche1: "RODRIGUEZ",
+                noche2: "LOPEZ",
                 especial: "LOBO",
                 supervisor: "ALEGRE"
             },
             {
                 dia: "Domingo",
                 fecha: 14,
-                mañana: "SCARSO, ORTIZ",
-                noche: "VEIGA, ALEGRE",
+                mañana1: "SCARSO",
+                mañana2: "ORTIZ",
+                noche1: "VEIGA",
+                noche2: "ALEGRE",
                 especial: "ATENCIO",
                 supervisor: "ATENCIO"
             },
             {
                 dia: "Lunes",
                 fecha: 15,
-                mañana: "COCUCCI, LOVERA",
-                noche: "MANSILLA, ORTIZ",
+                mañana1: "COCUCCI",
+                mañana2: "LOVERA",
+                noche1: "MANSILLA",
+                noche2: "ORTIZ",
                 especial: "DE LEONIBUS",
                 supervisor: "ORTIZ"
             },
             {
                 dia: "Martes",
                 fecha: 16,
-                mañana: "SEQUEIRA, SCARSO",
-                noche: "LOPEZ, ALEGRE",
+                mañana1: "SEQUEIRA",
+                mañana2: "SCARSO",
+                noche1: "LOPEZ",
+                noche2: "ALEGRE",
                 especial: "LOBO, CIRIGLIANO",
                 supervisor: "LOVERA"
             },
             {
                 dia: "Miércoles",
                 fecha: 17,
-                mañana: "COCUCCI, LOVERA, VEIGA",
-                noche: "ORTIZ, GONZALEZ L",
+                mañana1: "COCUCCI",
+                mañana2: "LOVERA",
+                noche1: "VEIGA",
+                noche2: "ORTIZ",
                 especial: "154",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Jueves",
                 fecha: 18,
-                mañana: "LOPEZ, ATENCIO, ALEGRE",
-                noche: "RODRIGUEZ, DE LEONIBUS",
+                mañana1: "LOPEZ",
+                mañana2: "ATENCIO",
+                noche1: "ALEGRE",
+                noche2: "RODRIGUEZ",
                 especial: "CIRIGLIANO",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Viernes",
                 fecha: 19,
-                mañana: "SEQUEIRA, MANSILLA, LOVERA",
-                noche: "ORTIZ, LOBO",
+                mañana1: "SEQUEIRA",
+                mañana2: "MANSILLA",
+                noche1: "LOVERA",
+                noche2: "ORTIZ",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Sábado",
                 fecha: 20,
-                mañana: "SCARSO, VIZGARRA, VEIGA",
-                noche: "ALEGRE, ATENCIO",
+                mañana1: "SCARSO",
+                mañana2: "VIZGARRA",
+                noche1: "VEIGA",
+                noche2: "ALEGRE",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Domingo",
                 fecha: 21,
-                mañana: "MANSILLA, ORTIZ, VIZGARRA",
-                noche: "ALEGRE, DE LEONIBUS",
+                mañana1: "MANSILLA",
+                mañana2: "ORTIZ",
+                noche1: "VIZGARRA",
+                noche2: "ALEGRE",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Lunes",
                 fecha: 22,
-                mañana: "LOPEZ, RODRIGUEZ, OJEDA",
-                noche: "SCARSO, LOBO",
+                mañana1: "LOPEZ",
+                mañana2: "RODRIGUEZ",
+                noche1: "OJEDA",
+                noche2: "SCARSO",
                 especial: "CIRIGLIANO",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Martes",
                 fecha: 23,
-                mañana: "COCUCCI, LOVERA, VEIGA",
-                noche: "OJEDA, GONZALEZ L",
+                mañana1: "COCUCCI",
+                mañana2: "LOVERA",
+                noche1: "VEIGA",
+                noche2: "OJEDA",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Miércoles",
                 fecha: 24,
-                mañana: "LOPEZ, ATENCIO, MANSILLA",
-                noche: "SCARSO, DE LEONIBUS",
+                mañana1: "LOPEZ",
+                mañana2: "ATENCIO",
+                noche1: "MANSILLA",
+                noche2: "SCARSO",
                 especial: "CIRIGLIANO",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Jueves",
                 fecha: 25,
-                mañana: "SEQUEIRA, LOVERA, OJEDA",
-                noche: "VIZGARRA, LOBO",
+                mañana1: "SEQUEIRA",
+                mañana2: "LOVERA",
+                noche1: "OJEDA",
+                noche2: "VIZGARRA",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Viernes",
                 fecha: 26,
-                mañana: "LOPEZ, RODRIGUEZ, ALEGRE",
-                noche: "SCARSO, ATENCIO",
+                mañana1: "LOPEZ",
+                mañana2: "RODRIGUEZ",
+                noche1: "ALEGRE",
+                noche2: "SCARSO",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Sábado",
                 fecha: 27,
-                mañana: "COCUCCI, RODRIGUEZ, MANSILLA",
-                noche: "VIZGARRA, DE LEONIBUS",
+                mañana1: "COCUCCI",
+                mañana2: "RODRIGUEZ",
+                noche1: "MANSILLA",
+                noche2: "VIZGARRA",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Domingo",
                 fecha: 28,
-                mañana: "SCARSO, ORTIZ, ALEGRE",
-                noche: "OJEDA, LOBO",
+                mañana1: "SCARSO",
+                mañana2: "ORTIZ",
+                noche1: "ALEGRE",
+                noche2: "OJEDA",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Lunes",
                 fecha: 29,
-                mañana: "SEQUEIRA, LOVERA, OJEDA",
-                noche: "COCUCCI, GONZALEZ L",
+                mañana1: "SEQUEIRA",
+                mañana2: "LOVERA",
+                noche1: "OJEDA",
+                noche2: "COCUCCI",
                 especial: "Por asignar",
                 supervisor: "Por asignar"
             },
             {
                 dia: "Martes",
                 fecha: 30,
-                mañana: "LOPEZ, ATENCIO, MANSILLA",
-                noche: "ALEGRE, DE LEONIBUS",
+                mañana1: "LOPEZ",
+                mañana2: "ATENCIO",
+                noche1: "MANSILLA",
+                noche2: "ALEGRE",
                 especial: "CIRIGLIANO",
                 supervisor: "Por asignar"
             }
         ];
 
-        const personalData = [
+        const choferesData = [
+            {
+                dia: "Lunes",
+                fecha: 1,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "CHARON",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Martes",
+                fecha: 2,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CARREÑO",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 3,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "CARREÑO",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Jueves",
+                fecha: 4,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "CHARON",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Viernes",
+                fecha: 5,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CHARON",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Sábado",
+                fecha: 6,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "CARREÑO",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Domingo",
+                fecha: 7,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "CHARON",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Lunes",
+                fecha: 8,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CHARON",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Martes",
+                fecha: 9,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "CARREÑO",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 10,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "CHARON",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Jueves",
+                fecha: 11,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CHARON",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Viernes",
+                fecha: 12,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "CARREÑO",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Sábado",
+                fecha: 13,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "CHARON",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Domingo",
+                fecha: 14,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CARREÑO",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Lunes",
+                fecha: 15,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "NARVAEZ",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Martes",
+                fecha: 16,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "NARVAEZ",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 17,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CARREÑO",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Jueves",
+                fecha: 18,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "NARVAEZ",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Viernes",
+                fecha: 19,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "NARVAEZ",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Sábado",
+                fecha: 20,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CARREÑO",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Domingo",
+                fecha: 21,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "NARVAEZ",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Lunes",
+                fecha: 22,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "CHARON",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Martes",
+                fecha: 23,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CARREÑO",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 24,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "NARVAEZ",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Jueves",
+                fecha: 25,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "NARVAEZ",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Viernes",
+                fecha: 26,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CHARON",
+                custodia4: "ACEVEDO"
+            },
+            {
+                dia: "Sábado",
+                fecha: 27,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "NARVAEZ",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Domingo",
+                fecha: 28,
+                custodia1: "ALMIRON",
+                custodia2: "ROBLEDO",
+                custodia3: "NARVAEZ",
+                custodia4: "FURFARO"
+            },
+            {
+                dia: "Lunes",
+                fecha: 29,
+                custodia1: "FERNANDEZ",
+                custodia2: "FERRER",
+                custodia3: "CARREÑO",
+                custodia4: "ACOSTA"
+            },
+            {
+                dia: "Martes",
+                fecha: 30,
+                custodia1: "PAZ",
+                custodia2: "PIANELLI",
+                custodia3: "NARVAEZ",
+                custodia4: "ACEVEDO"
+            }
+        ];
+
+        const personalCabinaData = [
             {
                 nombre: "SCARSO",
                 jerarquia: "Subinspector",
@@ -907,6 +1344,93 @@
             }
         ];
 
+        const personalChoferesData = [
+            {
+                nombre: "ALMIRON",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 1",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Sra. Amalia. Días libres: 6, 13-30."
+            },
+            {
+                nombre: "ROBLEDO",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 2",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Isabella. Guardias: 3-6-9-12-15-18-21-24-27-30."
+            },
+            {
+                nombre: "FERNANDEZ",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 1",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Sra. Amalia. Guardias: 1-4-7-10-13-16-19-22-25-28."
+            },
+            {
+                nombre: "FERRER",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 2",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Isabella. Guardias: 1-4-7-10-13-16-19-22-25-28."
+            },
+            {
+                nombre: "PAZ",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 3",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Angelina. Guardias: 2-5-8-11-14-17-20-23-26-29. Libre: 6."
+            },
+            {
+                nombre: "PIANELLI",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 2",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Isabella. Días libres: 6, 13-30."
+            },
+            {
+                nombre: "CHARON",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 1",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Sra. Amalia. Guardias: 3-6-9-12-15-18-21-24-27-30."
+            },
+            {
+                nombre: "CARREÑO",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 3",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Angelina. Guardias: 1-4-7-10-13-16-19-22-25-28."
+            },
+            {
+                nombre: "ACOSTA",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 4",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Valentino. Guardias: 2-5-8-11-14-17-20-23-26-29. 12x36 PARES L a V."
+            },
+            {
+                nombre: "ACEVEDO",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 4",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Valentino. 12x36 IMPARES L a V."
+            },
+            {
+                nombre: "FURFARO",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 4",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Valentino. 12x36 IMPARES L a V."
+            },
+            {
+                nombre: "NARVAEZ",
+                jerarquia: "Chofer",
+                guardias: "CUSTODIA 3",
+                disponibilidad: "disponible",
+                notas: "Asignado a custodia Angelina. Guardias: 2-5-8-11-14-17-20-23-26-29."
+            }
+        ];
+
         const coverageData = [
             {
                 semana: "1 (1-7)",
@@ -945,7 +1469,7 @@
 
         let editMode = false;
 
-        // Función para cambiar entre pestañas
+        // Función para cambiar entre pestañas principales
         function openTab(evt, tabName) {
             var i, tabcontent, tabs;
             
@@ -963,9 +1487,28 @@
             evt.currentTarget.classList.add("active");
         }
 
+        // Función para cambiar entre sub-pestañas de personal
+        function openSubTab(evt, subTabName) {
+            var i, subTabcontent, subTabs;
+            
+            subTabcontent = document.getElementsByClassName("sub-tab-content");
+            for (i = 0; i < subTabcontent.length; i++) {
+                subTabcontent[i].classList.remove("active");
+            }
+            
+            subTabs = document.getElementsByClassName("sub-tab");
+            for (i = 0; i < subTabs.length; i++) {
+                subTabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(subTabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
         // Función para cargar la tabla de turnos
         function loadTurnosTable() {
             const tableBody = document.querySelector("#turnos-table tbody");
+            tableBody.innerHTML = ''; // Limpiar tabla antes de cargar
             
             turnosData.forEach(dia => {
                 const row = document.createElement("tr");
@@ -978,8 +1521,10 @@
                 row.innerHTML = `
                     <td>${dia.dia}</td>
                     <td>${dia.fecha}</td>
-                    <td class="turno-mañana editable" contenteditable="false">${dia.mañana}</td>
-                    <td class="turno-noche editable" contenteditable="false">${dia.noche}</td>
+                    <td class="turno-mañana editable" contenteditable="false">${dia.mañana1}</td>
+                    <td class="turno-mañana editable" contenteditable="false">${dia.mañana2}</td>
+                    <td class="turno-noche editable" contenteditable="false">${dia.noche1}</td>
+                    <td class="turno-noche editable" contenteditable="false">${dia.noche2}</td>
                     <td class="turno-especial editable" contenteditable="false">${dia.especial}</td>
                 `;
                 
@@ -987,11 +1532,59 @@
             });
         }
 
-        // Función para cargar la tabla de personal
-        function loadPersonalTable() {
-            const tableBody = document.querySelector("#personal-table tbody");
+        // Función para cargar la tabla de choferes
+        function loadChoferesTable() {
+            const tableBody = document.querySelector("#choferes-table tbody");
+            tableBody.innerHTML = ''; // Limpiar tabla antes de cargar
             
-            personalData.forEach(persona => {
+            choferesData.forEach(dia => {
+                const row = document.createElement("tr");
+                
+                row.innerHTML = `
+                    <td>${dia.dia}</td>
+                    <td>${dia.fecha}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia1}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia2}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia3}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia4}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar la tabla de personal de cabina
+        function loadPersonalCabinaTable() {
+            const tableBody = document.querySelector("#personal-cabina-table tbody");
+            tableBody.innerHTML = ''; // Limpiar tabla antes de cargar
+            
+            personalCabinaData.forEach(persona => {
+                const row = document.createElement("tr");
+                
+                const statusClass = persona.disponibilidad === "disponible" ? "status-disponible" : 
+                                   persona.disponibilidad === "parcial" ? "status-parcial" : "status-no-disponible";
+                
+                const statusText = persona.disponibilidad === "disponible" ? "Disponible" : 
+                                  persona.disponibilidad === "parcial" ? "Parcial" : "No disponible";
+                
+                row.innerHTML = `
+                    <td><strong>${persona.nombre}</strong></td>
+                    <td class="editable" contenteditable="false">${persona.jerarquia}</td>
+                    <td class="editable" contenteditable="false">${persona.guardias}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td class="editable" contenteditable="false">${persona.notas}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar la tabla de personal de choferes
+        function loadPersonalChoferesTable() {
+            const tableBody = document.querySelector("#personal-choferes-table tbody");
+            tableBody.innerHTML = ''; // Limpiar tabla antes de cargar
+            
+            personalChoferesData.forEach(persona => {
                 const row = document.createElement("tr");
                 
                 const statusClass = persona.disponibilidad === "disponible" ? "status-disponible" : 
@@ -1015,6 +1608,7 @@
         // Función para cargar la tabla de cobertura
         function loadCoverageTable() {
             const tableBody = document.querySelector("#coverage-table tbody");
+            tableBody.innerHTML = ''; // Limpiar tabla antes de cargar
             
             coverageData.forEach(semana => {
                 const row = document.createElement("tr");
@@ -1038,6 +1632,7 @@
         // Función para cargar las notas importantes
         function loadImportantNotes() {
             const notesList = document.getElementById("important-notes");
+            notesList.innerHTML = ''; // Limpiar lista antes de cargar
             
             importantNotes.forEach(nota => {
                 const listItem = document.createElement("li");
@@ -1114,6 +1709,8 @@
                     .turno-mañana { background-color: #e3f2fd; }
                     .turno-noche { background-color: #e8eaf6; }
                     .turno-especial { background-color: #e8f5e9; }
+                    .turno-refuerzo { background-color: #fff3e0; }
+                    .custodia-header { background-color: #1a3b5d; color: white; }
                     .summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
                     .card { padding: 8px; border-left: 3px solid #3498db; }
                     .card h3 { font-size: 10px; margin-bottom: 5px; }
@@ -1124,7 +1721,9 @@
                     .notes li { font-size: 8px; margin-bottom: 3px; }
                     .alert { padding: 8px; margin: 10px 0; font-size: 9px; }
                     .tabs { display: none; }
+                    .sub-tabs { display: none; }
                     .tab-content { display: block !important; }
+                    .sub-tab-content { display: block !important; }
                     .tab-content:not(.active) { display: none !important; }
                 </style>
             `;
@@ -1183,8 +1782,11 @@
 
         // Inicializar la aplicación cuando el DOM esté cargado
         document.addEventListener("DOMContentLoaded", function() {
+            // Cargar todas las tablas
             loadTurnosTable();
-            loadPersonalTable();
+            loadChoferesTable();
+            loadPersonalCabinaTable();
+            loadPersonalChoferesTable();
             loadCoverageTable();
             loadImportantNotes();
         });
