@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Cabina Septiembre 2025</title>
+    <style>
+        :root {
+            --primary: #1a3b5d;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --morning: #e3f2fd;
+            --night: #e8eaf6;
+            --special: #e8f5e9;
+            --border: #dee2e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 15px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .legend {
+            background-color: var(--light);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .legend h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .color-box {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--dark);
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: var(--secondary);
+        }
+        
+        .tab.active {
+            color: var(--secondary);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--secondary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .turno-mañana {
+            background-color: var(--morning);
+        }
+        
+        .turno-noche {
+            background-color: var(--night);
+        }
+        
+        .turno-especial {
+            background-color: var(--special);
+        }
+        
+        .supervisor {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-disponible {
+            background-color: rgba(39, 174, 96, 0.15);
+            color: var(--success);
+        }
+        
+        .status-parcial {
+            background-color: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+        }
+        
+        .status-no-disponible {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--accent);
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+        
+        .card-desc {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+        }
+        
+        .notes {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffb300;
+            padding: 12px 15px;
+            margin-top: 20px;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .notes h3 {
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .notes ul {
+            padding-left: 20px;
+        }
+        
+        .notes li {
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 5px;
+                border-radius: 0;
+            }
+            
+            header {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .content {
+                padding: 15px 10px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cronograma Cabina Septiembre 2025</h1>
+            <div class="subtitle">Planificación de Turnos y Personal</div>
+        </header>
+        
+        <section class="legend">
+            <h2>Leyenda y Abreviaturas</h2>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="color-box" style="background-color: var(--morning);"></div>
+                    <div><strong>Turno Mañana:</strong> 07:00 - 19:00</div>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box" style="background-color: var(--night);"></div>
+                    <div><strong>Turno Noche:</strong> 19:00 - 07:00</div>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box" style="background-color: var(--special);"></div>
+                    <div><strong>Turno Especial:</strong> 08:00 - 20:00</div>
+                </div>
+                <div class="legend-item">
+                    <div><strong>12x36:</strong> 12h trabajo / 36h descanso</div>
+                </div>
+                <div class="legend-item">
+                    <div><strong>24x48:</strong> 24h trabajo / 48h descanso</div>
+                </div>
+                <div class="legend-item">
+                    <div><strong>IMPAR/PAR:</strong> Días del mes impares/pares</div>
+                </div>
+                <div class="legend-item">
+                    <div><strong>L/A:</strong> Licencia/Ausencia</div>
+                </div>
+                <div class="legend-item">
+                    <div><strong>Cursa L, M, M:</strong> Formación Lunes, Miércoles y Mañana</div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'turnos')">Turnos Diarios</button>
+                <button class="tab" onclick="openTab(event, 'personal')">Detalles por Personal</button>
+                <button class="tab" onclick="openTab(event, 'resumen')">Resumen de Cobertura</button>
+            </div>
+            
+            <div id="turnos" class="tab-content active">
+                <div class="alert alert-warning">
+                    <strong>Atención:</strong> Los días 17-30 tienen asignaciones de supervisores pendientes. Por favor, actualizar.
+                </div>
+                
+                <div class="table-container">
+                    <table id="turnos-table">
+                        <thead>
+                            <tr>
+                                <th>Día</th>
+                                <th>Fecha</th>
+                                <th>Turno Mañana (07:00-19:00)</th>
+                                <th>Turno Noche (19:00-07:00)</th>
+                                <th>Turno Especial (08:00-20:00)</th>
+                                <th>Supervisor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente desde JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="personal" class="tab-content">
+                <div class="table-container">
+                    <table id="personal-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Jerarquía</th>
+                                <th>Guardias Asignadas</th>
+                                <th>Disponibilidad</th>
+                                <th>Restricciones/Notas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente desde JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="resumen" class="tab-content">
+                <div class="summary-cards">
+                    <div class="card">
+                        <h3>Días Totales</h3>
+                        <div class="card-value">30</div>
+                        <div class="card-desc">Días en el mes de septiembre</div>
+                    </div>
+                    <div class="card">
+                        <h3>Cobertura Promedio</h3>
+                        <div class="card-value">92%</div>
+                        <div class="card-desc">Porcentaje de días cubiertos</div>
+                    </div>
+                    <div class="card">
+                        <h3>Personal Activo</h3>
+                        <div class="card-value">15</div>
+                        <div class="card-desc">Agentes disponibles este mes</div>
+                    </div>
+                    <div class="card">
+                        <h3>Incidencias</h3>
+                        <div class="card-value">3</div>
+                        <div class="card-desc">Días con cobertura parcial</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="coverage-table">
+                        <thead>
+                            <tr>
+                                <th>Semana</th>
+                                <th>Días Cubiertos</th>
+                                <th>Incidentes</th>
+                                <th>Acciones Requeridas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente desde JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="notes">
+                    <h3>Novedades Importantes</h3>
+                    <ul id="important-notes">
+                        <!-- Las notas se cargarán dinámicamente desde JavaScript -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos completos para todos los días de septiembre 2025
+        const turnosData = [
+            {
+                dia: "Lunes",
+                fecha: 1,
+                mañana: "SEQUEIRA, LOVERA",
+                noche: "OJEDA, ORTIZ",
+                especial: "LOBO",
+                supervisor: "SCARSO"
+            },
+            {
+                dia: "Martes",
+                fecha: 2,
+                mañana: "SCARSO, RODRIGUEZ",
+                noche: "VEIGA, VIZGARRA",
+                especial: "ATENCIO, CIRIGLIANO",
+                supervisor: "LOBO"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 3,
+                mañana: "COCUCCI, LOVERA",
+                noche: "MANSILLA, ORTIZ",
+                especial: "DE LEONIBUS",
+                supervisor: "VIZGARRA"
+            },
+            {
+                dia: "Jueves",
+                fecha: 4,
+                mañana: "SEQUEIRA, ATENCIO",
+                noche: "OJEDA, RODRIGUEZ",
+                especial: "LOBO, CIRIGLIANO",
+                supervisor: "LOPEZ"
+            },
+            {
+                dia: "Viernes",
+                fecha: 5,
+                mañana: "VEIGA, LOVERA",
+                noche: "COCUCCI, OJEDA",
+                especial: "GONZALEZ L",
+                supervisor: "DE LEONIBUS"
+            },
+            {
+                dia: "Sábado",
+                fecha: 6,
+                mañana: "VIZGARRA, MANSILLA",
+                noche: "VEIGA",
+                especial: "DE LEONIBUS",
+                supervisor: "SEQUEIRA"
+            },
+            {
+                dia: "Domingo",
+                fecha: 7,
+                mañana: "VIZGARRA, COCUCCI",
+                noche: "OJEDA, RODRIGUEZ",
+                especial: "LOBO",
+                supervisor: "MANSILLA"
+            },
+            {
+                dia: "Lunes",
+                fecha: 8,
+                mañana: "SEQUEIRA, SCARSO",
+                noche: "VEIGA, LOPEZ",
+                especial: "ATENCIO, CIRIGLIANO",
+                supervisor: "CIRIGLIANO"
+            },
+            {
+                dia: "Martes",
+                fecha: 9,
+                mañana: "COCUCCI, LOVERA",
+                noche: "MANSILLA, ORTIZ",
+                especial: "DE LEONIBUS",
+                supervisor: "RODRIGUEZ"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 10,
+                mañana: "SCARSO, SEQUEIRA",
+                noche: "LOPEZ, RODRIGUEZ",
+                especial: "LOBO, CIRIGLIANO",
+                supervisor: "COCUCCI"
+            },
+            {
+                dia: "Jueves",
+                fecha: 11,
+                mañana: "COCUCCI, VEIGA",
+                noche: "VIZGARRA, ORTIZ",
+                especial: "GONZALEZ L",
+                supervisor: "OJEDA"
+            },
+            {
+                dia: "Viernes",
+                fecha: 12,
+                mañana: "ATENCIO, MANSILLA",
+                noche: "ALEGRE, VEIGA",
+                especial: "DE LEONIBUS, CIRIGLIANO",
+                supervisor: "VEIGA"
+            },
+            {
+                dia: "Sábado",
+                fecha: 13,
+                mañana: "SEQUEIRA, VIZGARRA",
+                noche: "RODRIGUEZ, LOPEZ",
+                especial: "LOBO",
+                supervisor: "ALEGRE"
+            },
+            {
+                dia: "Domingo",
+                fecha: 14,
+                mañana: "SCARSO, ORTIZ",
+                noche: "VEIGA, ALEGRE",
+                especial: "ATENCIO",
+                supervisor: "ATENCIO"
+            },
+            {
+                dia: "Lunes",
+                fecha: 15,
+                mañana: "COCUCCI, LOVERA",
+                noche: "MANSILLA, ORTIZ",
+                especial: "DE LEONIBUS",
+                supervisor: "ORTIZ"
+            },
+            {
+                dia: "Martes",
+                fecha: 16,
+                mañana: "SEQUEIRA, SCARSO",
+                noche: "LOPEZ, ALEGRE",
+                especial: "LOBO, CIRIGLIANO",
+                supervisor: "LOVERA"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 17,
+                mañana: "COCUCCI, LOVERA, VEIGA",
+                noche: "ORTIZ, GONZALEZ L",
+                especial: "154",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Jueves",
+                fecha: 18,
+                mañana: "LOPEZ, ATENCIO, ALEGRE",
+                noche: "RODRIGUEZ, DE LEONIBUS",
+                especial: "CIRIGLIANO",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Viernes",
+                fecha: 19,
+                mañana: "SEQUEIRA, MANSILLA, LOVERA",
+                noche: "ORTIZ, LOBO",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Sábado",
+                fecha: 20,
+                mañana: "SCARSO, VIZGARRA, VEIGA",
+                noche: "ALEGRE, ATENCIO",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Domingo",
+                fecha: 21,
+                mañana: "MANSILLA, ORTIZ, VIZGARRA",
+                noche: "ALEGRE, DE LEONIBUS",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Lunes",
+                fecha: 22,
+                mañana: "LOPEZ, RODRIGUEZ, OJEDA",
+                noche: "SCARSO, LOBO",
+                especial: "CIRIGLIANO",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Martes",
+                fecha: 23,
+                mañana: "COCUCCI, LOVERA, VEIGA",
+                noche: "OJEDA, GONZALEZ L",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Miércoles",
+                fecha: 24,
+                mañana: "LOPEZ, ATENCIO, MANSILLA",
+                noche: "SCARSO, DE LEONIBUS",
+                especial: "CIRIGLIANO",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Jueves",
+                fecha: 25,
+                mañana: "SEQUEIRA, LOVERA, OJEDA",
+                noche: "VIZGARRA, LOBO",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Viernes",
+                fecha: 26,
+                mañana: "LOPEZ, RODRIGUEZ, ALEGRE",
+                noche: "SCARSO, ATENCIO",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Sábado",
+                fecha: 27,
+                mañana: "COCUCCI, RODRIGUEZ, MANSILLA",
+                noche: "VIZGARRA, DE LEONIBUS",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Domingo",
+                fecha: 28,
+                mañana: "SCARSO, ORTIZ, ALEGRE",
+                noche: "OJEDA, LOBO",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Lunes",
+                fecha: 29,
+                mañana: "SEQUEIRA, LOVERA, OJEDA",
+                noche: "COCUCCI, GONZALEZ L",
+                especial: "Por asignar",
+                supervisor: "Por asignar"
+            },
+            {
+                dia: "Martes",
+                fecha: 30,
+                mañana: "LOPEZ, ATENCIO, MANSILLA",
+                noche: "ALEGRE, DE LEONIBUS",
+                especial: "CIRIGLIANO",
+                supervisor: "Por asignar"
+            }
+        ];
+
+        const personalData = [
+            {
+                nombre: "SCARSO",
+                jerarquia: "Subinspector",
+                guardias: "12x36 IMPAR",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir días pares. No disponible: 7, 27. Licencia: 29/09 - 06/10."
+            },
+            {
+                nombre: "LOBO",
+                jerarquia: "Subinspector",
+                guardias: "24x48",
+                disponibilidad: "disponible",
+                notas: "Días: 2,5,8,11,14,17,20,23,26,29. El 18 solo noche."
+            },
+            {
+                nombre: "VIZGARRA",
+                jerarquia: "Ayudante",
+                guardias: "Día/Noche",
+                disponibilidad: "parcial",
+                notas: "Día/Noche: 6,7,13,14,20,21,27,28. Solo noche: 4,5,11,12,18,19,25,26,29,30. Cursa L, M, M."
+            },
+            {
+                nombre: "LOVERA",
+                jerarquia: "Ayudante",
+                guardias: "12x36",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir de noche. 6 y 7 no. Curso instructor de tiro de día."
+            },
+            {
+                nombre: "COCUCCI",
+                jerarquia: "Ayudante",
+                guardias: "12x36 IMPAR",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir: 07-19h: 2,6,8,10,14,18,22,26,27. 19-07h: 2,4,7,13,18,26,28."
+            },
+            {
+                nombre: "ORTIZ",
+                jerarquia: "Agente",
+                guardias: "12x36",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir de noche. 6 y 7 no. Curso instructor de tiro de día."
+            },
+            {
+                nombre: "OJEDA",
+                jerarquia: "Cabo 1°",
+                guardias: "24x48",
+                disponibilidad: "disponible",
+                notas: "Guardias: 03-06-21-24-27 y 30. L/A del 08 al 20/09."
+            },
+            {
+                nombre: "VEIGA",
+                jerarquia: "Cabo 1°",
+                guardias: "24x48",
+                disponibilidad: "disponible",
+                notas: "Guardias: 1,4,7,10,13,16,19,22. L/A del 25 al 01/10."
+            },
+            {
+                nombre: "ATENCIO",
+                jerarquia: "Cabo",
+                guardias: "12x36 IMPAR",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir pares. No el 7-10-13."
+            },
+            {
+                nombre: "RODRIGUEZ",
+                jerarquia: "Sargento",
+                guardias: "12x36 IMPAR",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir pares. No el 1,4."
+            },
+            {
+                nombre: "DE LEONIBUS",
+                jerarquia: "Suboficial Auxiliar",
+                guardias: "24x48",
+                disponibilidad: "disponible",
+                notas: "Guardias: 2-5-8-11-14-17-20-23-26-29."
+            },
+            {
+                nombre: "MANSILLA",
+                jerarquia: "Sargento 1°",
+                guardias: "24x48",
+                disponibilidad: "disponible",
+                notas: "Guardias: 2,5,8,11,14,17,20,23,26,29. El 18 solo noche."
+            },
+            {
+                nombre: "CIRIGLIANO",
+                jerarquia: "Sargento 1°",
+                guardias: "12x36 IMPAR",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir pares. Del 1 al 6 curso SYC. 7 votación. 20 capacitación."
+            },
+            {
+                nombre: "LOPEZ",
+                jerarquia: "Ayudante",
+                guardias: "12x36 IMPAR",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir pares. No el 12, lunes, miércoles y jueves."
+            },
+            {
+                nombre: "ALEGRE",
+                jerarquia: "Cabo",
+                guardias: "12x36 IMPAR",
+                disponibilidad: "disponible",
+                notas: "Puede cubrir pares. No el 12, lunes, miércoles y jueves."
+            },
+            {
+                nombre: "GONZALEZ L",
+                jerarquia: "Suboficial Auxiliar",
+                guardias: "24x48",
+                disponibilidad: "disponible",
+                notas: "Guardias: 2-5-8-11-14-17-20-23-26-29."
+            }
+        ];
+
+        const coverageData = [
+            {
+                semana: "1 (1-7)",
+                diasCubiertos: "7/7",
+                incidentes: 0,
+                acciones: "Ninguna"
+            },
+            {
+                semana: "2 (8-14)",
+                diasCubiertos: "6/7",
+                incidentes: 1,
+                acciones: "Cubrir día 12 (turno noche)"
+            },
+            {
+                semana: "3 (15-21)",
+                diasCubiertos: "7/7",
+                incidentes: 0,
+                acciones: "Ninguna"
+            },
+            {
+                semana: "4 (22-30)",
+                diasCubiertos: "6/7",
+                incidentes: 2,
+                acciones: "Cubrir días 27 y 28"
+            }
+        ];
+
+        const importantNotes = [
+            "El día 12 se necesita refuerzo en turno noche",
+            "SCARSO tiene licencia del 29/09 al 06/10",
+            "VIZGARRA cursa formación los lunes, miércoles y mañanas",
+            "El día 18 LOBO solo está disponible para turno noche",
+            "Los días 27 y 28 necesitan cobertura adicional",
+            "Días 17-30: Asignación de supervisores pendiente"
+        ];
+
+        // Función para cambiar entre pestañas
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Función para cargar la tabla de turnos
+        function loadTurnosTable() {
+            const tableBody = document.querySelector("#turnos-table tbody");
+            
+            turnosData.forEach(dia => {
+                const row = document.createElement("tr");
+                
+                // Resaltar filas con supervisor por asignar
+                if (dia.supervisor === "Por asignar") {
+                    row.style.backgroundColor = "#fff8e1";
+                }
+                
+                row.innerHTML = `
+                    <td>${dia.dia}</td>
+                    <td>${dia.fecha}</td>
+                    <td class="turno-mañana">${dia.mañana}</td>
+                    <td class="turno-noche">${dia.noche}</td>
+                    <td class="turno-especial">${dia.especial}</td>
+                    <td class="supervisor">${dia.supervisor}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar la tabla de personal
+        function loadPersonalTable() {
+            const tableBody = document.querySelector("#personal-table tbody");
+            
+            personalData.forEach(persona => {
+                const row = document.createElement("tr");
+                
+                const statusClass = persona.disponibilidad === "disponible" ? "status-disponible" : 
+                                   persona.disponibilidad === "parcial" ? "status-parcial" : "status-no-disponible";
+                
+                const statusText = persona.disponibilidad === "disponible" ? "Disponible" : 
+                                  persona.disponibilidad === "parcial" ? "Parcial" : "No disponible";
+                
+                row.innerHTML = `
+                    <td><strong>${persona.nombre}</strong></td>
+                    <td>${persona.jerarquia}</td>
+                    <td>${persona.guardias}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td>${persona.notas}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar la tabla de cobertura
+        function loadCoverageTable() {
+            const tableBody = document.querySelector("#coverage-table tbody");
+            
+            coverageData.forEach(semana => {
+                const row = document.createElement("tr");
+                
+                // Resaltar filas con incidentes
+                if (semana.incidentes > 0) {
+                    row.style.backgroundColor = "#ffebee";
+                }
+                
+                row.innerHTML = `
+                    <td>${semana.semana}</td>
+                    <td>${semana.diasCubiertos}</td>
+                    <td>${semana.incidentes}</td>
+                    <td>${semana.acciones}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Función para cargar las notas importantes
+        function loadImportantNotes() {
+            const notesList = document.getElementById("important-notes");
+            
+            importantNotes.forEach(nota => {
+                const listItem = document.createElement("li");
+                listItem.textContent = nota;
+                notesList.appendChild(listItem);
+            });
+        }
+
+        // Inicializar la aplicación cuando el DOM esté cargado
+        document.addEventListener("DOMContentLoaded", function() {
+            loadTurnosTable();
+            loadPersonalTable();
+            loadCoverageTable();
+            loadImportantNotes();
+        });
+    </script>
+</body>
+</html>
