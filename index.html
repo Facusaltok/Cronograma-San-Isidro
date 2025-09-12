@@ -188,11 +188,6 @@
             background-color: var(--special);
         }
         
-        .supervisor {
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        
         .status {
             display: inline-block;
             padding: 3px 8px;
@@ -337,11 +332,11 @@
     <div class="container">
         <header>
             <h1>Cronograma Cabina Septiembre 2025</h1>
-            <div class="subtitle">Planificación de Turnos y Personal</div>
+            <div class="subtitle"><br></div>
         </header>
         
         <section class="legend">
-            <h2>Leyenda y Abreviaturas</h2>
+            <h2>San Isidro</h2>
             <div class="legend-grid">
                 <div class="legend-item">
                     <div class="color-box" style="background-color: var(--morning);"></div>
@@ -353,22 +348,22 @@
                 </div>
                 <div class="legend-item">
                     <div class="color-box" style="background-color: var(--special);"></div>
-                    <div><strong>Turno Especial:</strong> 08:00 - 20:00</div>
+                    <div><strong>AMT:</strong> 08:00 - 20:00</div>
                 </div>
                 <div class="legend-item">
-                    <div><strong>12x36:</strong> 12h trabajo / 36h descanso</div>
+                    <div><br></div>
                 </div>
                 <div class="legend-item">
-                    <div><strong>24x48:</strong> 24h trabajo / 48h descanso</div>
+                    <div><br></div>
                 </div>
                 <div class="legend-item">
-                    <div><strong>IMPAR/PAR:</strong> Días del mes impares/pares</div>
+                    <div><br></div>
                 </div>
                 <div class="legend-item">
-                    <div><strong>L/A:</strong> Licencia/Ausencia</div>
+                    <div><br></div>
                 </div>
                 <div class="legend-item">
-                    <div><strong>Cursa L, M, M:</strong> Formación Lunes, Miércoles y Mañana</div>
+                    <div><br></div>
                 </div>
             </div>
         </section>
@@ -382,7 +377,7 @@
             
             <div id="turnos" class="tab-content active">
                 <div class="alert alert-warning">
-                    <strong>Atención:</strong> Los días 17-30 tienen asignaciones de supervisores pendientes. Por favor, actualizar.
+                    <strong>Atención:</strong> Los días 17-30 tienen asignaciones pendientes. Por favor, actualizar.
                 </div>
                 
                 <div class="table-container">
@@ -393,8 +388,7 @@
                                 <th>Fecha</th>
                                 <th>Turno Mañana (07:00-19:00)</th>
                                 <th>Turno Noche (19:00-07:00)</th>
-                                <th>Turno Especial (08:00-20:00)</th>
-                                <th>Supervisor</th>
+                                <th>amt (08:00-20:00)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -411,9 +405,9 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Jerarquía</th>
-                                <th>Guardias Asignadas</th>
+                                <th>ORDINARIO</th>
                                 <th>Disponibilidad</th>
-                                <th>Restricciones/Notas</th>
+                                <th>OBSERVACIONES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -438,7 +432,7 @@
                     <div class="card">
                         <h3>Personal Activo</h3>
                         <div class="card-value">15</div>
-                        <div class="card-desc">Agentes disponibles este mes</div>
+                        <div class="card-desc">Personal disponible este mes</div>
                     </div>
                     <div class="card">
                         <h3>Incidencias</h3>
@@ -905,7 +899,6 @@
                     <td class="turno-mañana">${dia.mañana}</td>
                     <td class="turno-noche">${dia.noche}</td>
                     <td class="turno-especial">${dia.especial}</td>
-                    <td class="supervisor">${dia.supervisor}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -979,5 +972,5 @@
             loadImportantNotes();
         });
     </script>
-</body>
-</html>
+
+</body></html>
