@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cronograma Cabina Septiembre 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #1a3b5d;
@@ -47,6 +49,7 @@
             color: white;
             padding: 20px 25px;
             text-align: center;
+            position: relative;
         }
         
         h1 {
@@ -57,6 +60,46 @@
         .subtitle {
             font-size: 1rem;
             opacity: 0.9;
+        }
+        
+        .action-buttons {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
         }
         
         .legend {
@@ -188,6 +231,23 @@
             background-color: var(--special);
         }
         
+        .editable {
+            cursor: text;
+            position: relative;
+            padding: 8px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        
+        .editable:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .editable:focus {
+            outline: 2px solid var(--secondary);
+            background-color: white;
+        }
+        
         .status {
             display: inline-block;
             padding: 3px 8px;
@@ -286,6 +346,11 @@
             color: #721c24;
         }
         
+        .edit-mode {
+            background-color: #f0f8ff;
+            border: 1px dashed var(--secondary);
+        }
+        
         @media (max-width: 768px) {
             .container {
                 margin: 5px;
@@ -298,6 +363,13 @@
             
             h1 {
                 font-size: 1.5rem;
+            }
+            
+            .action-buttons {
+                position: static;
+                transform: none;
+                justify-content: center;
+                margin-top: 10px;
             }
             
             .content {
@@ -332,7 +404,15 @@
     <div class="container">
         <header>
             <h1>Cronograma Cabina Septiembre 2025</h1>
-            <div class="subtitle"><br></div>
+            <div class="subtitle">San Isidro</div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="toggleEditMode()">
+                    <span id="edit-icon">✏️</span> <span id="edit-text">Editar</span>
+                </button>
+                <button class="btn btn-success" onclick="exportToPDF()">
+                    📄 Exportar PDF
+                </button>
+            </div>
         </header>
         
         <section class="legend">
@@ -368,7 +448,7 @@
             </div>
         </section>
         
-        <div class="content">
+        <div class="content" id="content-to-export">
             <div class="tabs">
                 <button class="tab active" onclick="openTab(event, 'turnos')">Turnos Diarios</button>
                 <button class="tab" onclick="openTab(event, 'personal')">Detalles por Personal</button>
@@ -863,6 +943,8 @@
             "Días 17-30: Asignación de supervisores pendiente"
         ];
 
+        let editMode = false;
+
         // Función para cambiar entre pestañas
         function openTab(evt, tabName) {
             var i, tabcontent, tabs;
@@ -896,9 +978,9 @@
                 row.innerHTML = `
                     <td>${dia.dia}</td>
                     <td>${dia.fecha}</td>
-                    <td class="turno-mañana">${dia.mañana}</td>
-                    <td class="turno-noche">${dia.noche}</td>
-                    <td class="turno-especial">${dia.especial}</td>
+                    <td class="turno-mañana editable" contenteditable="false">${dia.mañana}</td>
+                    <td class="turno-noche editable" contenteditable="false">${dia.noche}</td>
+                    <td class="turno-especial editable" contenteditable="false">${dia.especial}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -920,10 +1002,10 @@
                 
                 row.innerHTML = `
                     <td><strong>${persona.nombre}</strong></td>
-                    <td>${persona.jerarquia}</td>
-                    <td>${persona.guardias}</td>
+                    <td class="editable" contenteditable="false">${persona.jerarquia}</td>
+                    <td class="editable" contenteditable="false">${persona.guardias}</td>
                     <td><span class="status ${statusClass}">${statusText}</span></td>
-                    <td>${persona.notas}</td>
+                    <td class="editable" contenteditable="false">${persona.notas}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -946,7 +1028,7 @@
                     <td>${semana.semana}</td>
                     <td>${semana.diasCubiertos}</td>
                     <td>${semana.incidentes}</td>
-                    <td>${semana.acciones}</td>
+                    <td class="editable" contenteditable="false">${semana.acciones}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -960,8 +1042,143 @@
             importantNotes.forEach(nota => {
                 const listItem = document.createElement("li");
                 listItem.textContent = nota;
+                listItem.contentEditable = "false";
+                listItem.className = "editable";
                 notesList.appendChild(listItem);
             });
+        }
+
+        // Función para alternar el modo de edición
+        function toggleEditMode() {
+            editMode = !editMode;
+            const editables = document.querySelectorAll('.editable');
+            const editIcon = document.getElementById('edit-icon');
+            const editText = document.getElementById('edit-text');
+            
+            if (editMode) {
+                editables.forEach(element => {
+                    element.contentEditable = "true";
+                    element.classList.add('edit-mode');
+                });
+                editIcon.textContent = '💾';
+                editText.textContent = 'Guardar';
+            } else {
+                editables.forEach(element => {
+                    element.contentEditable = "false";
+                    element.classList.remove('edit-mode');
+                });
+                editIcon.textContent = '✏️';
+                editText.textContent = 'Editar';
+                
+                // Aquí podrías agregar código para guardar los cambios
+                alert('Cambios guardados correctamente');
+            }
+        }
+
+        // Función para exportar a PDF
+        async function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            // Ocultar botones y elementos de edición para el PDF
+            const actionButtons = document.querySelector('.action-buttons');
+            const originalDisplay = actionButtons.style.display;
+            actionButtons.style.display = 'none';
+            
+            // Remover clases de edición
+            const editables = document.querySelectorAll('.editable');
+            editables.forEach(element => {
+                element.classList.remove('edit-mode');
+            });
+            
+            // Capturar el contenido
+            const content = document.getElementById('content-to-export');
+            
+            // Crear una copia del contenido para el PDF
+            const contentCopy = content.cloneNode(true);
+            
+            // Estilos específicos para el PDF
+            const pdfStyles = `
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    .container { max-width: 100%; margin: 0; box-shadow: none; }
+                    header { padding: 15px; }
+                    h1 { font-size: 18px; margin-bottom: 5px; }
+                    .legend { padding: 10px; }
+                    .legend h2 { font-size: 14px; margin-bottom: 5px; }
+                    .legend-item { font-size: 10px; }
+                    .content { padding: 10px; }
+                    table { width: 100%; border-collapse: collapse; font-size: 8px; }
+                    th, td { padding: 5px; border: 1px solid #ddd; }
+                    th { background-color: #1a3b5d; color: white; }
+                    .turno-mañana { background-color: #e3f2fd; }
+                    .turno-noche { background-color: #e8eaf6; }
+                    .turno-especial { background-color: #e8f5e9; }
+                    .summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+                    .card { padding: 8px; border-left: 3px solid #3498db; }
+                    .card h3 { font-size: 10px; margin-bottom: 5px; }
+                    .card-value { font-size: 16px; font-weight: bold; color: #3498db; }
+                    .card-desc { font-size: 8px; color: #7f8c8d; }
+                    .notes { padding: 8px; margin-top: 10px; }
+                    .notes h3 { font-size: 12px; margin-bottom: 5px; }
+                    .notes li { font-size: 8px; margin-bottom: 3px; }
+                    .alert { padding: 8px; margin: 10px 0; font-size: 9px; }
+                    .tabs { display: none; }
+                    .tab-content { display: block !important; }
+                    .tab-content:not(.active) { display: none !important; }
+                </style>
+            `;
+            
+            // Crear un elemento temporal para el PDF
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = pdfStyles;
+            tempElement.appendChild(contentCopy);
+            document.body.appendChild(tempElement);
+            
+            try {
+                // Convertir a imagen
+                const canvas = await html2canvas(tempElement, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    width: tempElement.scrollWidth,
+                    height: tempElement.scrollHeight
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 190; // Ancho en mm (A4 - márgenes)
+                const pageHeight = 295; // Altura en mm (A4 - márgenes)
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 10;
+                
+                // Agregar la imagen al PDF
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Si el contenido es más largo que una página, agregar más páginas
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Guardar el PDF
+                const fileName = `Cronograma_Cabina_Septiembre_2025_${new Date().toISOString().split('T')[0]}.pdf`;
+                pdf.save(fileName);
+                
+                // Mostrar mensaje de éxito
+                alert('PDF generado correctamente: ' + fileName);
+                
+            } catch (error) {
+                console.error('Error al generar PDF:', error);
+                alert('Error al generar el PDF. Por favor, intente nuevamente.');
+            } finally {
+                // Restaurar la vista original
+                document.body.removeChild(tempElement);
+                actionButtons.style.display = originalDisplay;
+            }
         }
 
         // Inicializar la aplicación cuando el DOM esté cargado
@@ -972,5 +1189,5 @@
             loadImportantNotes();
         });
     </script>
-
-</body></html>
+</body>
+</html>
