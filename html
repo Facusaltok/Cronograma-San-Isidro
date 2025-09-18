@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cronograma San Isidro — Selector de Mes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary: #1a3b5d;
+      --secondary: #3498db;
+      --accent: #e74c3c;
+      --light: #f8f9fa;
+      --dark: #2c3e50;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --morning: #e3f2fd;
+      --night: #e8eaf6;
+      --special: #e8f5e9;
+      --refuerzo: #fff3e0;
+      --border: #dee2e6;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body{ background:#f5f7fa; color:var(--dark); line-height:1.6; padding:15px; }
+    .container{ max-width:1400px; margin:0 auto; background:#fff; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,.08); overflow:hidden; }
+    header{ background:linear-gradient(135deg, var(--primary), var(--secondary)); color:#fff; padding:20px 25px; text-align:center; position:relative; }
+    h1{ font-size:1.8rem; margin-bottom:5px; }
+    .subtitle{ font-size:1rem; opacity:.9; }
+    .action-buttons{ position:absolute; right:20px; top:50%; transform:translateY(-50%); display:flex; gap:10px; }
+    .btn{ padding:8px 16px; border:none; border-radius:4px; cursor:pointer; font-weight:600; font-size:.9rem; transition:all .3s; display:flex; align-items:center; gap:5px; }
+    .btn-primary{ background:#fff; color:var(--primary); }
+    .btn-primary:hover{ background:#f0f0f0; }
+    .btn-success{ background:var(--success); color:#fff; }
+    .btn-success:hover{ background:#219653; }
+
+    .legend{ background:var(--light); padding:15px 20px; border-bottom:1px solid var(--border); }
+    .legend h2{ color:var(--primary); margin-bottom:10px; font-size:1.2rem; }
+    .legend-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:10px; }
+    .legend-item{ display:flex; align-items:center; font-size:.9rem; }
+    .color-box{ width:16px; height:16px; margin-right:8px; border-radius:3px; border:1px solid #ddd; }
+
+    .controls{ display:flex; gap:12px; align-items:flex-end; padding:12px 20px; border-bottom:1px solid var(--border); background:#fff; }
+    .control{ display:flex; flex-direction:column; gap:6px; }
+    .label{ font-size:.8rem; color:#475569; }
+    .input{ padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; outline:none; }
+    .input:focus{ border-color:var(--secondary); box-shadow:0 0 0 3px rgba(52,152,219,.15) }
+
+    .content{ padding:20px; }
+    .tabs{ display:flex; margin-bottom:15px; border-bottom:2px solid var(--border); overflow-x:auto; }
+    .tab{ padding:10px 20px; cursor:pointer; background:none; border:none; font-size:.95rem; font-weight:600; color:var(--dark); transition:.3s; white-space:nowrap; position:relative; }
+    .tab:hover{ color:var(--secondary); }
+    .tab.active{ color:var(--secondary); }
+    .tab.active::after{ content:''; position:absolute; bottom:-2px; left:0; width:100%; height:3px; background:var(--secondary); }
+    .tab-content{ display:none; }
+    .tab-content.active{ display:block; }
+
+    .table-container{ overflow-x:auto; margin-bottom:20px; border-radius:6px; border:1px solid var(--border); background:#fff; }
+    table{ width:100%; border-collapse:collapse; background:#fff; }
+    th, td{ padding:12px 15px; text-align:left; border-bottom:1px solid var(--border); font-size:.9rem; }
+    th{ background:var(--primary); color:#fff; font-weight:600; text-transform:uppercase; font-size:.85rem; letter-spacing:.5px; position:sticky; top:0; }
+    tr:hover{ background:#f8f9fa; }
+
+    .turno-mañana{ background:var(--morning); }
+    .turno-noche{ background:var(--night); }
+    .turno-especial{ background:var(--special); }
+    .turno-refuerzo{ background:var(--refuerzo); }
+
+    .editable{ cursor:text; position:relative; padding:8px; border-radius:3px; transition:background-color .3s; }
+    .editable:hover{ background-color:rgba(52,152,219,.1); }
+    .editable:focus{ outline:2px solid var(--secondary); background:#fff; }
+
+    .alert{ padding:10px 15px; margin:15px 0; border-radius:6px; font-size:.9rem; }
+    .alert-warning{ background:#fff3cd; border-left:4px solid #ffc107; color:#856404; }
+
+    .custodia-header{ background:var(--primary); color:#fff; font-weight:600; text-align:center; font-size:.85rem; padding:8px; }
+
+    @media (max-width: 768px){
+      .container{ margin:5px; border-radius:0; }
+      header{ padding:15px 10px; }
+      h1{ font-size:1.5rem; }
+      .action-buttons{ position:static; transform:none; justify-content:center; margin-top:10px; }
+      .content{ padding:15px 10px; }
+      .tabs{ flex-wrap:wrap; }
+      .tab{ padding:8px 12px; font-size:.85rem; }
+      th, td{ padding:8px 10px; font-size:.85rem; }
+      .legend-grid{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Cronograma San Isidro</h1>
+      <div class="subtitle">San Isidro</div>
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="toggleEditMode()"><span id="edit-icon">✏️</span> <span id="edit-text">Editar</span></button>
+        <button class="btn btn-success" onclick="exportToPDF()">📄 Exportar PDF</button>
+      </div>
+    </header>
+
+    <!-- Controles -->
+    <div class="controls">
+      <div class="control">
+        <label class="label" for="monthPicker">Mes</label>
+        <input class="input" type="month" id="monthPicker"/>
+      </div>
+      <div class="control">
+        <label class="label">&nbsp;</label>
+        <button class="btn btn-primary" onclick="reloadForSelectedMonth()">Actualizar mes</button>
+      </div>
+    </div>
+
+    <section class="legend">
+      <h2>San Isidro</h2>
+      <div class="legend-grid">
+        <div class="legend-item"><div class="color-box" style="background:var(--morning)"></div><div><strong>Turno Mañana:</strong> 07:00 - 19:00</div></div>
+        <div class="legend-item"><div class="color-box" style="background:var(--night)"></div><div><strong>Turno Noche:</strong> 19:00 - 07:00</div></div>
+        <div class="legend-item"><div class="color-box" style="background:var(--special)"></div><div><strong>AMT:</strong> 08:00 - 20:00</div></div>
+        <div class="legend-item"><div class="color-box" style="background:var(--refuerzo)"></div><div><strong>Chofer de Apoyo:</strong> Custodia</div></div>
+      </div>
+    </section>
+
+    <div class="content" id="content-to-export">
+      <div class="tabs">
+        <button class="tab active" onclick="openTab(event, 'turnos')">Turnos Diarios</button>
+        <button class="tab" onclick="openTab(event, 'choferes')">Choferes Custodia</button>
+        <button class="tab" onclick="openTab(event, 'resumen')">Resumen</button>
+      </div>
+
+      <!-- TURNOS -->
+      <div id="turnos" class="tab-content active">
+        <div class="alert alert-warning"><strong>Atención:</strong> Seleccioná el mes y completá las asignaciones.</div>
+        <div class="table-container">
+          <table id="turnos-table">
+            <thead>
+              <tr>
+                <th rowspan="2">Día</th>
+                <th rowspan="2">Fecha</th>
+                <th colspan="2" style="text-align:center;">Turno Mañana (07:00-19:00)</th>
+                <th colspan="2" style="text-align:center;">Turno Noche (19:00-07:00)</th>
+                <th rowspan="2">AMT (08:00-20:00)</th>
+                <th rowspan="2">Chofer de Apoyo</th>
+              </tr>
+              <tr>
+                <th></th><th></th><th></th><th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CHOFERES -->
+      <div id="choferes" class="tab-content">
+        <div class="alert alert-warning"><strong>Atención:</strong> Verificá las asignaciones de choferes para las custodias.</div>
+        <div class="table-container">
+          <table id="choferes-table">
+            <thead>
+              <tr>
+                <th rowspan="2">Día</th>
+                <th rowspan="2">Fecha</th>
+                <th colspan="4" style="text-align:center;">CUSTODIAS</th>
+              </tr>
+              <tr>
+                <th class="custodia-header">CUSTODIA 1 (SRA. AMALIA)</th>
+                <th class="custodia-header">CUSTODIA 2 (ISABELLA)</th>
+                <th class="custodia-header">CUSTODIA 3 (ANGELINA)</th>
+                <th class="custodia-header">CUSTODIA 4 (VALENTINO)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RESUMEN (vacío editable) -->
+      <div id="resumen" class="tab-content">
+        <div class="table-container">
+          <table id="coverage-table">
+            <thead>
+              <tr>
+                <th>Semana</th>
+                <th>Días Cubiertos</th>
+                <th>Incidentes</th>
+                <th>Acciones Requeridas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- vacío para completar -->
+            </tbody>
+          </table>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Notas Importantes (click para editar)</th></tr></thead>
+            <tbody id="important-notes"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  let editMode = false;
+
+  function openTab(evt, tabName) {
+    const tabcontent = document.getElementsByClassName("tab-content");
+    for (let i=0; i<tabcontent.length; i++) tabcontent[i].classList.remove("active");
+    const tabs = document.getElementsByClassName("tab");
+    for (let i=0; i<tabs.length; i++) tabs[i].classList.remove("active");
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function toggleEditMode(){
+    editMode = !editMode;
+    const editables = document.querySelectorAll('.editable');
+    const editIcon = document.getElementById('edit-icon');
+    const editText = document.getElementById('edit-text');
+    if (editMode){
+      editables.forEach(el=>{ el.contentEditable = "true"; el.classList.add('turno-edit'); });
+      editIcon.textContent='💾'; editText.textContent='Guardar';
+    } else {
+      editables.forEach(el=>{ el.contentEditable = "false"; el.classList.remove('turno-edit'); });
+      editIcon.textContent='✏️'; editText.textContent='Editar';
+      alert('Cambios guardados (localmente).');
+    }
+  }
+
+  // Utilidades de fecha
+  function getDaysInMonth(year, month){ return new Date(year, month+1, 0).getDate(); }
+  function pad2(n){ return n.toString().padStart(2,'0'); }
+  function esWeekdayName(y,m,d){
+    const dd = new Date(y, m, d);
+    const name = dd.toLocaleDateString('es-AR', { weekday: 'long' });
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+  function formatDMY(y,m,d){ return pad2(d) + '/' + pad2(m+1) + '/' + y; }
+
+  function generateTurnosData(year, month){
+    const days = getDaysInMonth(year, month);
+    const arr = [];
+    for (let d=1; d<=days; d++){
+      arr.push({
+        dia: esWeekdayName(year, month, d),
+        fecha: formatDMY(year, month, d),
+        mañana1: "", mañana2: "",
+        noche1: "",  noche2:  "",
+        especial: "", apoyo: "",
+        supervisor: ""
+      });
+    }
+    return arr;
+  }
+  function generateChoferesData(year, month){
+    const days = getDaysInMonth(year, month);
+    const arr = [];
+    for (let d=1; d<=days; d++){
+      arr.push({
+        dia: esWeekdayName(year, month, d),
+        fecha: formatDMY(year, month, d),
+        custodia1:"", custodia2:"", custodia3:"", custodia4:""
+      });
+    }
+    return arr;
+  }
+
+  function loadTurnosTable(data){
+    const tb = document.querySelector("#turnos-table tbody");
+    tb.innerHTML = "";
+    data.forEach(dia=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${dia.dia}</td>
+        <td>${dia.fecha}</td>
+        <td class="turno-mañana editable" contenteditable="false">${dia.mañana1}</td>
+        <td class="turno-mañana editable" contenteditable="false">${dia.mañana2}</td>
+        <td class="turno-noche editable" contenteditable="false">${dia.noche1}</td>
+        <td class="turno-noche editable" contenteditable="false">${dia.noche2}</td>
+        <td class="turno-especial editable" contenteditable="false">${dia.especial}</td>
+        <td class="turno-refuerzo editable" contenteditable="false">${dia.apoyo}</td>
+      `;
+      tb.appendChild(tr);
+    });
+  }
+  function loadChoferesTable(data){
+    const tb = document.querySelector("#choferes-table tbody");
+    tb.innerHTML = "";
+    data.forEach(dia=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${dia.dia}</td>
+        <td>${dia.fecha}</td>
+        <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia1}</td>
+        <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia2}</td>
+        <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia3}</td>
+        <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia4}</td>
+      `;
+      tb.appendChild(tr);
+    });
+  }
+  function loadResumenBlank(){
+    const notes = document.getElementById('important-notes');
+    notes.innerHTML = "";
+    for(let i=0;i<3;i++){
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.className = "editable";
+      td.contentEditable = "false";
+      td.textContent = ""; // vacío para completar
+      tr.appendChild(td);
+      notes.appendChild(tr);
+    }
+    const covTb = document.querySelector('#coverage-table tbody');
+    covTb.innerHTML = "";
+    // 4 semanas vacías para completar
+    for(let i=1;i<=4;i++){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="editable" contenteditable="false">Semana ${i}</td>
+        <td class="editable" contenteditable="false"></td>
+        <td class="editable" contenteditable="false"></td>
+        <td class="editable" contenteditable="false"></td>
+      `;
+      covTb.appendChild(tr);
+    }
+  }
+
+  function reloadForSelectedMonth(){
+    const val = document.getElementById('monthPicker').value; // "YYYY-MM"
+    if (!val){ alert('Seleccioná un mes.'); return; }
+    const [y,m] = val.split('-').map(Number);
+    const year = y, month = m-1;
+    const tData = generateTurnosData(year, month);
+    const cData = generateChoferesData(year, month);
+    loadTurnosTable(tData);
+    loadChoferesTable(cData);
+    loadResumenBlank();
+  }
+
+  // Exportar PDF
+  async function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    // Ocultar botones
+    const actionButtons = document.querySelector('.action-buttons');
+    const originalDisplay = actionButtons.style.display;
+    actionButtons.style.display = 'none';
+
+    // Remover estilos de edición
+    const editables = document.querySelectorAll('.editable');
+    editables.forEach(el => el.classList.remove('turno-edit'));
+
+    const content = document.getElementById('content-to-export');
+    const clone = content.cloneNode(true);
+
+    const pdfStyles = `
+      <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width:100%; margin:0; box-shadow:none; }
+        header { padding:15px; }
+        h1 { font-size:18px; margin-bottom:5px; }
+        .legend { padding:10px; }
+        .legend h2 { font-size:14px; margin-bottom:5px; }
+        .legend-item { font-size:10px; }
+        .content { padding:10px; }
+        table { width:100%; border-collapse:collapse; font-size:8px; }
+        th, td { padding:5px; border:1px solid #ddd; }
+        th { background:#1a3b5d; color:#fff; }
+        .turno-mañana { background:#e3f2fd; }
+        .turno-noche { background:#e8eaf6; }
+        .turno-especial { background:#e8f5e9; }
+        .turno-refuerzo { background:#fff3e0; }
+        .custodia-header { background:#1a3b5d; color:#fff; }
+        .tabs { display:none; }
+        .tab-content { display:block !important; }
+      </style>
+    `;
+    const temp = document.createElement('div');
+    temp.innerHTML = pdfStyles;
+    temp.appendChild(clone);
+    document.body.appendChild(temp);
+    try{
+      const canvas = await html2canvas(temp, { scale:2, useCORS:true, logging:false, width: temp.scrollWidth, height: temp.scrollHeight });
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 190;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 10;
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0){
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      const fileName = `Cronograma_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+      alert('PDF generado correctamente: ' + fileName);
+    } catch (e){
+      console.error(e); alert('Error al generar el PDF.');
+    } finally {
+      document.body.removeChild(temp);
+      actionButtons.style.display = originalDisplay;
+    }
+  }
+
+  // Init
+  document.addEventListener('DOMContentLoaded', ()=>{
+    // Mes por defecto: actual
+    const now = new Date();
+    const ym = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,'0');
+    const mp = document.getElementById('monthPicker');
+    mp.value = ym;
+    reloadForSelectedMonth();
+  });
+</script>
+</body>
+</html>
