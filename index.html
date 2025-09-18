@@ -1,5 +1,4 @@
-# Create an updated HTML file with month selector and blank fields
-html_content = r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -28,12 +27,12 @@ html_content = r"""<!DOCTYPE html>
     header{ background:linear-gradient(135deg, var(--primary), var(--secondary)); color:#fff; padding:20px 25px; text-align:center; position:relative; }
     h1{ font-size:1.8rem; margin-bottom:5px; }
     .subtitle{ font-size:1rem; opacity:.9; }
-    .action-buttons{ position:absolute; right:20px; top:50%; transform:translateY(-50%); display:flex; gap:10px; }
-    .btn{ padding:8px 16px; border:none; border-radius:4px; cursor:pointer; font-weight:600; font-size:.9rem; transition:all .3s; display:flex; align-items:center; gap:5px; }
+    .action-buttons{ position:absolute; right:20px; top:50%; transform:translateY(-50%); display:flex; gap:10px; flex-wrap:wrap; }
+    .btn{ padding:8px 12px; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:.9rem; transition:all .2s; display:flex; align-items:center; gap:6px; }
+    .btn:hover{ filter:brightness(.95); }
     .btn-primary{ background:#fff; color:var(--primary); }
-    .btn-primary:hover{ background:#f0f0f0; }
     .btn-success{ background:var(--success); color:#fff; }
-    .btn-success:hover{ background:#219653; }
+    .btn-ghost{ background:#ffffff; color:#1f2937; border:1px solid #e5e7eb; }
 
     .legend{ background:var(--light); padding:15px 20px; border-bottom:1px solid var(--border); }
     .legend h2{ color:var(--primary); margin-bottom:10px; font-size:1.2rem; }
@@ -41,7 +40,7 @@ html_content = r"""<!DOCTYPE html>
     .legend-item{ display:flex; align-items:center; font-size:.9rem; }
     .color-box{ width:16px; height:16px; margin-right:8px; border-radius:3px; border:1px solid #ddd; }
 
-    .controls{ display:flex; gap:12px; align-items:flex-end; padding:12px 20px; border-bottom:1px solid var(--border); background:#fff; }
+    .controls{ display:flex; gap:12px; align-items:flex-end; padding:12px 20px; border-bottom:1px solid var(--border); background:#fff; flex-wrap:wrap;}
     .control{ display:flex; flex-direction:column; gap:6px; }
     .label{ font-size:.8rem; color:#475569; }
     .input{ padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; outline:none; }
@@ -49,7 +48,7 @@ html_content = r"""<!DOCTYPE html>
 
     .content{ padding:20px; }
     .tabs{ display:flex; margin-bottom:15px; border-bottom:2px solid var(--border); overflow-x:auto; }
-    .tab{ padding:10px 20px; cursor:pointer; background:none; border:none; font-size:.95rem; font-weight:600; color:var(--dark); transition:.3s; white-space:nowrap; position:relative; }
+    .tab{ padding:10px 20px; cursor:pointer; background:none; border:none; font-size:.95rem; font-weight:600; color:var(--dark); transition:.2s; white-space:nowrap; position:relative; }
     .tab:hover{ color:var(--secondary); }
     .tab.active{ color:var(--secondary); }
     .tab.active::after{ content:''; position:absolute; bottom:-2px; left:0; width:100%; height:3px; background:var(--secondary); }
@@ -76,11 +75,13 @@ html_content = r"""<!DOCTYPE html>
 
     .custodia-header{ background:var(--primary); color:#fff; font-weight:600; text-align:center; font-size:.85rem; padding:8px; }
 
+    @media (max-width: 900px){
+      .action-buttons{ position:static; transform:none; justify-content:center; margin-top:10px; }
+    }
     @media (max-width: 768px){
       .container{ margin:5px; border-radius:0; }
       header{ padding:15px 10px; }
       h1{ font-size:1.5rem; }
-      .action-buttons{ position:static; transform:none; justify-content:center; margin-top:10px; }
       .content{ padding:15px 10px; }
       .tabs{ flex-wrap:wrap; }
       .tab{ padding:8px 12px; font-size:.85rem; }
@@ -95,8 +96,9 @@ html_content = r"""<!DOCTYPE html>
       <h1>Cronograma San Isidro</h1>
       <div class="subtitle">San Isidro</div>
       <div class="action-buttons">
-        <button class="btn btn-primary" onclick="toggleEditMode()"><span id="edit-icon">✏️</span> <span id="edit-text">Editar</span></button>
-        <button class="btn btn-success" onclick="exportToPDF()">📄 Exportar PDF</button>
+        <button class="btn btn-primary" onclick="toggleEditMode()"><span id="edit-icon">✏️</span><span id="edit-text">Editar</span></button>
+        <button class="btn btn-ghost"  onclick="exportPDFCabina()">📄 Exportar PDF Cabina</button>
+        <button class="btn btn-ghost"  onclick="exportPDFChoferes()">📄 Exportar PDF Choferes</button>
       </div>
     </header>
 
@@ -129,7 +131,7 @@ html_content = r"""<!DOCTYPE html>
         <button class="tab" onclick="openTab(event, 'resumen')">Resumen</button>
       </div>
 
-      <!-- TURNOS -->
+      <!-- TURNOS (CABINA) -->
       <div id="turnos" class="tab-content active">
         <div class="alert alert-warning"><strong>Atención:</strong> Seleccioná el mes y completá las asignaciones.</div>
         <div class="table-container">
@@ -340,8 +342,8 @@ html_content = r"""<!DOCTYPE html>
     loadResumenBlank();
   }
 
-  // Exportar PDF
-  async function exportToPDF() {
+  /* ============ EXPORTACIONES SEPARADAS ============ */
+  async function exportSectionToPDF(element, filenameBase){
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF('p', 'mm', 'a4');
 
@@ -350,23 +352,49 @@ html_content = r"""<!DOCTYPE html>
     const originalDisplay = actionButtons.style.display;
     actionButtons.style.display = 'none';
 
-    // Remover estilos de edición
-    const editables = document.querySelectorAll('.editable');
-    editables.forEach(el => el.classList.remove('turno-edit'));
+    // Quitar estilo edición visual
+    document.querySelectorAll('.editable').forEach(el => el.classList.remove('turno-edit'));
 
-    const content = document.getElementById('content-to-export');
-    const clone = content.cloneNode(true);
+    // Clonar solo la sección a exportar (junto a título + leyenda)
+    const wrapper = document.createElement('div');
+    // Encabezado ligero
+    const h = document.createElement('div');
+    h.innerHTML = `
+      <div style="padding:10px 0; font-family:Arial; font-size:14px;">
+        <div style="font-weight:bold;">${filenameBase.toUpperCase()}</div>
+        <div style="font-size:11px;color:#555">MES: ${document.getElementById('monthPicker').value || '(sin seleccionar)'}</div>
+      </div>`;
+    wrapper.appendChild(h);
 
+    // Leyenda reducida
+    const legend = document.createElement('div');
+    legend.innerHTML = `
+      <style>
+        .__pdf_legend th, .__pdf_legend td { border:1px solid #ddd; padding:4px; font-size:9px; }
+        .__pdf_legend th{ background:#1a3b5d; color:#fff; }
+      </style>
+      <table class="__pdf_legend" style="border-collapse:collapse; width:100%; margin-bottom:8px;">
+        <thead><tr><th>Referencia</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td style="background:#e3f2fd;">Mañana</td><td>07:00 - 19:00</td></tr>
+          <tr><td style="background:#e8eaf6;">Noche</td><td>19:00 - 07:00</td></tr>
+          <tr><td style="background:#e8f5e9;">AMT</td><td>08:00 - 20:00</td></tr>
+          <tr><td style="background:#fff3e0;">Apoyo / Custodia</td><td>Chofer de Apoyo / Choferes custodias</td></tr>
+        </tbody>
+      </table>`;
+    wrapper.appendChild(legend);
+
+    // Clonar y forzar visible
+    const clone = element.cloneNode(true);
+    // Si es un tab-content oculto por CSS, nos aseguramos de mostrarlo
+    clone.style.display = 'block';
+
+    wrapper.appendChild(clone);
+
+    // Estilos PDF
     const pdfStyles = `
       <style>
         body { font-family: Arial, sans-serif; }
-        .container { max-width:100%; margin:0; box-shadow:none; }
-        header { padding:15px; }
-        h1 { font-size:18px; margin-bottom:5px; }
-        .legend { padding:10px; }
-        .legend h2 { font-size:14px; margin-bottom:5px; }
-        .legend-item { font-size:10px; }
-        .content { padding:10px; }
         table { width:100%; border-collapse:collapse; font-size:8px; }
         th, td { padding:5px; border:1px solid #ddd; }
         th { background:#1a3b5d; color:#fff; }
@@ -375,14 +403,13 @@ html_content = r"""<!DOCTYPE html>
         .turno-especial { background:#e8f5e9; }
         .turno-refuerzo { background:#fff3e0; }
         .custodia-header { background:#1a3b5d; color:#fff; }
-        .tabs { display:none; }
-        .tab-content { display:block !important; }
       </style>
     `;
     const temp = document.createElement('div');
     temp.innerHTML = pdfStyles;
-    temp.appendChild(clone);
+    temp.appendChild(wrapper);
     document.body.appendChild(temp);
+
     try{
       const canvas = await html2canvas(temp, { scale:2, useCORS:true, logging:false, width: temp.scrollWidth, height: temp.scrollHeight });
       const imgData = canvas.toDataURL('image/png');
@@ -399,9 +426,9 @@ html_content = r"""<!DOCTYPE html>
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
-      const fileName = `Cronograma_${new Date().toISOString().split('T')[0]}.pdf`;
-      pdf.save(fileName);
-      alert('PDF generado correctamente: ' + fileName);
+      const iso = new Date().toISOString().split('T')[0];
+      pdf.save(`${filenameBase.replaceAll(" ","_")}_${iso}.pdf`);
+      alert('PDF generado correctamente.');
     } catch (e){
       console.error(e); alert('Error al generar el PDF.');
     } finally {
@@ -410,9 +437,19 @@ html_content = r"""<!DOCTYPE html>
     }
   }
 
+  function exportPDFCabina(){
+    const sec = document.getElementById('turnos');
+    exportSectionToPDF(sec, 'Cronograma Cabina');
+  }
+  function exportPDFChoferes(){
+    const sec = document.getElementById('choferes');
+    exportSectionToPDF(sec, 'Cronograma Choferes');
+  }
+  /* ============ /EXPORTACIONES SEPARADAS ============ */
+
   // Init
   document.addEventListener('DOMContentLoaded', ()=>{
-    // Set default month to current
+    // Mes por defecto: actual
     const now = new Date();
     const ym = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,'0');
     const mp = document.getElementById('monthPicker');
@@ -422,7 +459,3 @@ html_content = r"""<!DOCTYPE html>
 </script>
 </body>
 </html>
-"""
-with open("/mnt/data/cronograma_mes.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-print("Saved to /mnt/data/cronograma_mes.html")
