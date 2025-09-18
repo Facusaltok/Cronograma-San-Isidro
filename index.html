@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+# Write the edited HTML with an extra "Chofer de Apoyo" column next to AMT in the Turnos table.
+html = r"""<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -263,21 +264,10 @@
             background-color: #f8f9fa;
         }
         
-        .turno-mañana {
-            background-color: var(--morning);
-        }
-        
-        .turno-noche {
-            background-color: var(--night);
-        }
-        
-        .turno-especial {
-            background-color: var(--special);
-        }
-        
-        .turno-refuerzo {
-            background-color: var(--refuerzo);
-        }
+        .turno-mañana { background-color: var(--morning); }
+        .turno-noche  { background-color: var(--night); }
+        .turno-especial { background-color: var(--special); }
+        .turno-refuerzo { background-color: var(--refuerzo); }
         
         .editable {
             cursor: text;
@@ -287,14 +277,8 @@
             transition: background-color 0.3s;
         }
         
-        .editable:hover {
-            background-color: rgba(52, 152, 219, 0.1);
-        }
-        
-        .editable:focus {
-            outline: 2px solid var(--secondary);
-            background-color: white;
-        }
+        .editable:hover { background-color: rgba(52, 152, 219, 0.1); }
+        .editable:focus { outline: 2px solid var(--secondary); background-color: white; }
         
         .status {
             display: inline-block;
@@ -303,21 +287,9 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-        
-        .status-disponible {
-            background-color: rgba(39, 174, 96, 0.15);
-            color: var(--success);
-        }
-        
-        .status-parcial {
-            background-color: rgba(243, 156, 18, 0.15);
-            color: var(--warning);
-        }
-        
-        .status-no-disponible {
-            background-color: rgba(231, 76, 60, 0.15);
-            color: var(--accent);
-        }
+        .status-disponible   { background-color: rgba(39,174,96,.15); color: var(--success); }
+        .status-parcial      { background-color: rgba(243,156,18,.15); color: var(--warning); }
+        .status-no-disponible{ background-color: rgba(231,76,60,.15); color: var(--accent); }
         
         .summary-cards {
             display: grid;
@@ -325,151 +297,38 @@
             gap: 15px;
             margin-top: 20px;
         }
+        .card { background:#fff; border-radius:6px; padding:15px; box-shadow:0 2px 6px rgba(0,0,0,.06); border-left:4px solid var(--secondary); }
+        .card h3 { color: var(--primary); margin-bottom:10px; font-size:1rem; }
+        .card-value { font-size:1.8rem; font-weight:700; color: var(--secondary); margin-bottom:5px; }
+        .card-desc { color:#7f8c8d; font-size:.85rem; }
         
-        .card {
-            background: white;
-            border-radius: 6px;
-            padding: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            border-left: 4px solid var(--secondary);
-        }
+        .notes { background-color:#fff8e1; border-left:4px solid #ffb300; padding:12px 15px; margin-top:20px; border-radius:0 6px 6px 0; }
+        .notes h3 { color:#e65100; margin-bottom:8px; font-size:1.1rem; }
+        .notes ul { padding-left:20px; }
+        .notes li { margin-bottom:6px; font-size:.9rem; }
         
-        .card h3 {
-            color: var(--primary);
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
+        .alert { padding:10px 15px; margin:15px 0; border-radius:6px; font-size:.9rem; }
+        .alert-warning { background-color:#fff3cd; border-left:4px solid #ffc107; color:#856404; }
+        .alert-danger  { background-color:#f8d7da; border-left:4px solid #dc3545; color:#721c24; }
         
-        .card-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 5px;
-        }
+        .edit-mode { background-color:#f0f8ff; border:1px dashed var(--secondary); }
         
-        .card-desc {
-            color: #7f8c8d;
-            font-size: 0.85rem;
-        }
-        
-        .notes {
-            background-color: #fff8e1;
-            border-left: 4px solid #ffb300;
-            padding: 12px 15px;
-            margin-top: 20px;
-            border-radius: 0 6px 6px 0;
-        }
-        
-        .notes h3 {
-            color: #e65100;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-        }
-        
-        .notes ul {
-            padding-left: 20px;
-        }
-        
-        .notes li {
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-        }
-        
-        .alert {
-            padding: 10px 15px;
-            margin: 15px 0;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-        
-        .alert-warning {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            color: #856404;
-        }
-        
-        .alert-danger {
-            background-color: #f8d7da;
-            border-left: 4px solid #dc3545;
-            color: #721c24;
-        }
-        
-        .edit-mode {
-            background-color: #f0f8ff;
-            border: 1px dashed var(--secondary);
-        }
-        
-        .turno-subheader {
-            background-color: #f1f3f5;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--dark);
-        }
-        
-        .custodia-header {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 600;
-            text-align: center;
-            font-size: 0.85rem;
-            padding: 8px;
-        }
+        .turno-subheader { background-color:#f1f3f5; font-weight:600; font-size:.85rem; color:var(--dark); }
+        .custodia-header { background-color: var(--primary); color:white; font-weight:600; text-align:center; font-size:.85rem; padding:8px; }
         
         @media (max-width: 768px) {
-            .container {
-                margin: 5px;
-                border-radius: 0;
-            }
-            
-            header {
-                padding: 15px 10px;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .action-buttons {
-                position: static;
-                transform: none;
-                justify-content: center;
-                margin-top: 10px;
-            }
-            
-            .content {
-                padding: 15px 10px;
-            }
-            
-            .tabs {
-                flex-wrap: wrap;
-            }
-            
-            .tab {
-                padding: 8px 12px;
-                font-size: 0.85rem;
-            }
-            
-            .sub-tabs {
-                flex-wrap: wrap;
-            }
-            
-            .sub-tab {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-            
-            th, td {
-                padding: 8px 10px;
-                font-size: 0.85rem;
-            }
-            
-            .legend-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .summary-cards {
-                grid-template-columns: 1fr;
-            }
+            .container { margin:5px; border-radius:0; }
+            header { padding:15px 10px; }
+            h1 { font-size:1.5rem; }
+            .action-buttons { position:static; transform:none; justify-content:center; margin-top:10px; }
+            .content { padding:15px 10px; }
+            .tabs { flex-wrap:wrap; }
+            .tab { padding:8px 12px; font-size:.85rem; }
+            .sub-tabs { flex-wrap:wrap; }
+            .sub-tab { padding:6px 12px; font-size:.8rem; }
+            th, td { padding:8px 10px; font-size:.85rem; }
+            .legend-grid { grid-template-columns:1fr; }
+            .summary-cards { grid-template-columns:1fr; }
         }
     </style>
 </head>
@@ -505,19 +364,7 @@
                 </div>
                 <div class="legend-item">
                     <div class="color-box" style="background-color: var(--refuerzo);"></div>
-                    <div><strong>Choferes:</strong> Custodia</div>
-                </div>
-                <div class="legend-item">
-                    <div><br></div>
-                </div>
-                <div class="legend-item">
-                    <div><br></div>
-                </div>
-                <div class="legend-item">
-                    <div><br></div>
-                </div>
-                <div class="legend-item">
-                    <div><br></div>
+                    <div><strong>Chofer de Apoyo:</strong> Refuerzos</div>
                 </div>
             </div>
         </section>
@@ -543,7 +390,8 @@
                                 <th rowspan="2">Fecha</th>
                                 <th colspan="2" style="text-align: center;">Turno Mañana (07:00-19:00)</th>
                                 <th colspan="2" style="text-align: center;">Turno Noche (19:00-07:00)</th>
-                                <th rowspan="2">amt (08:00-20:00)</th>
+                                <th rowspan="2">AMT (08:00-20:00)</th>
+                                <th rowspan="2">Chofer de Apoyo</th>
                             </tr>
                             <tr>
                                 <th></th>
@@ -684,778 +532,110 @@
     <script>
         // Datos completos para todos los días de septiembre 2025
         const turnosData = [
-            {
-                dia: "Lunes",
-                fecha: 1,
-                mañana1: "SEQUEIRA",
-                mañana2: "LOVERA",
-                noche1: "OJEDA",
-                noche2: "ORTIZ",
-                especial: "LOBO",
-                supervisor: "SCARSO"
-            },
-            {
-                dia: "Martes",
-                fecha: 2,
-                mañana1: "SCARSO",
-                mañana2: "RODRIGUEZ",
-                noche1: "VEIGA",
-                noche2: "VIZGARRA",
-                especial: "ATENCIO, CIRIGLIANO",
-                supervisor: "LOBO"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 3,
-                mañana1: "COCUCCI",
-                mañana2: "LOVERA",
-                noche1: "MANSILLA",
-                noche2: "ORTIZ",
-                especial: "DE LEONIBUS",
-                supervisor: "VIZGARRA"
-            },
-            {
-                dia: "Jueves",
-                fecha: 4,
-                mañana1: "SEQUEIRA",
-                mañana2: "ATENCIO",
-                noche1: "OJEDA",
-                noche2: "RODRIGUEZ",
-                especial: "LOBO, CIRIGLIANO",
-                supervisor: "LOPEZ"
-            },
-            {
-                dia: "Viernes",
-                fecha: 5,
-                mañana1: "VEIGA",
-                mañana2: "LOVERA",
-                noche1: "COCUCCI",
-                noche2: "OJEDA",
-                especial: "GONZALEZ L",
-                supervisor: "DE LEONIBUS"
-            },
-            {
-                dia: "Sábado",
-                fecha: 6,
-                mañana1: "VIZGARRA",
-                mañana2: "MANSILLA",
-                noche1: "VEIGA",
-                noche2: "",
-                especial: "DE LEONIBUS",
-                supervisor: "SEQUEIRA"
-            },
-            {
-                dia: "Domingo",
-                fecha: 7,
-                mañana1: "VIZGARRA",
-                mañana2: "COCUCCI",
-                noche1: "OJEDA",
-                noche2: "RODRIGUEZ",
-                especial: "LOBO",
-                supervisor: "MANSILLA"
-            },
-            {
-                dia: "Lunes",
-                fecha: 8,
-                mañana1: "SEQUEIRA",
-                mañana2: "SCARSO",
-                noche1: "VEIGA",
-                noche2: "LOPEZ",
-                especial: "ATENCIO, CIRIGLIANO",
-                supervisor: "CIRIGLIANO"
-            },
-            {
-                dia: "Martes",
-                fecha: 9,
-                mañana1: "COCUCCI",
-                mañana2: "LOVERA",
-                noche1: "MANSILLA",
-                noche2: "ORTIZ",
-                especial: "DE LEONIBUS",
-                supervisor: "RODRIGUEZ"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 10,
-                mañana1: "SCARSO",
-                mañana2: "SEQUEIRA",
-                noche1: "LOPEZ",
-                noche2: "RODRIGUEZ",
-                especial: "LOBO, CIRIGLIANO",
-                supervisor: "COCUCCI"
-            },
-            {
-                dia: "Jueves",
-                fecha: 11,
-                mañana1: "COCUCCI",
-                mañana2: "VEIGA",
-                noche1: "VIZGARRA",
-                noche2: "ORTIZ",
-                especial: "GONZALEZ L",
-                supervisor: "OJEDA"
-            },
-            {
-                dia: "Viernes",
-                fecha: 12,
-                mañana1: "ATENCIO",
-                mañana2: "MANSILLA",
-                noche1: "ALEGRE",
-                noche2: "VEIGA",
-                especial: "DE LEONIBUS, CIRIGLIANO",
-                supervisor: "VEIGA"
-            },
-            {
-                dia: "Sábado",
-                fecha: 13,
-                mañana1: "SEQUEIRA",
-                mañana2: "VIZGARRA",
-                noche1: "RODRIGUEZ",
-                noche2: "LOPEZ",
-                especial: "LOBO",
-                supervisor: "ALEGRE"
-            },
-            {
-                dia: "Domingo",
-                fecha: 14,
-                mañana1: "SCARSO",
-                mañana2: "ORTIZ",
-                noche1: "VEIGA",
-                noche2: "ALEGRE",
-                especial: "ATENCIO",
-                supervisor: "ATENCIO"
-            },
-            {
-                dia: "Lunes",
-                fecha: 15,
-                mañana1: "COCUCCI",
-                mañana2: "LOVERA",
-                noche1: "MANSILLA",
-                noche2: "ORTIZ",
-                especial: "DE LEONIBUS",
-                supervisor: "ORTIZ"
-            },
-            {
-                dia: "Martes",
-                fecha: 16,
-                mañana1: "SEQUEIRA",
-                mañana2: "SCARSO",
-                noche1: "LOPEZ",
-                noche2: "ALEGRE",
-                especial: "LOBO, CIRIGLIANO",
-                supervisor: "LOVERA"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 17,
-                mañana1: "COCUCCI",
-                mañana2: "LOVERA",
-                noche1: "VEIGA",
-                noche2: "ORTIZ",
-                especial: "154",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Jueves",
-                fecha: 18,
-                mañana1: "LOPEZ",
-                mañana2: "ATENCIO",
-                noche1: "ALEGRE",
-                noche2: "RODRIGUEZ",
-                especial: "CIRIGLIANO",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Viernes",
-                fecha: 19,
-                mañana1: "SEQUEIRA",
-                mañana2: "MANSILLA",
-                noche1: "LOVERA",
-                noche2: "ORTIZ",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Sábado",
-                fecha: 20,
-                mañana1: "SCARSO",
-                mañana2: "VIZGARRA",
-                noche1: "VEIGA",
-                noche2: "ALEGRE",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Domingo",
-                fecha: 21,
-                mañana1: "MANSILLA",
-                mañana2: "ORTIZ",
-                noche1: "VIZGARRA",
-                noche2: "ALEGRE",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Lunes",
-                fecha: 22,
-                mañana1: "LOPEZ",
-                mañana2: "RODRIGUEZ",
-                noche1: "OJEDA",
-                noche2: "SCARSO",
-                especial: "CIRIGLIANO",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Martes",
-                fecha: 23,
-                mañana1: "COCUCCI",
-                mañana2: "LOVERA",
-                noche1: "VEIGA",
-                noche2: "OJEDA",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 24,
-                mañana1: "LOPEZ",
-                mañana2: "ATENCIO",
-                noche1: "MANSILLA",
-                noche2: "SCARSO",
-                especial: "CIRIGLIANO",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Jueves",
-                fecha: 25,
-                mañana1: "SEQUEIRA",
-                mañana2: "LOVERA",
-                noche1: "OJEDA",
-                noche2: "VIZGARRA",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Viernes",
-                fecha: 26,
-                mañana1: "LOPEZ",
-                mañana2: "RODRIGUEZ",
-                noche1: "ALEGRE",
-                noche2: "SCARSO",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Sábado",
-                fecha: 27,
-                mañana1: "COCUCCI",
-                mañana2: "RODRIGUEZ",
-                noche1: "MANSILLA",
-                noche2: "VIZGARRA",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Domingo",
-                fecha: 28,
-                mañana1: "SCARSO",
-                mañana2: "ORTIZ",
-                noche1: "ALEGRE",
-                noche2: "OJEDA",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Lunes",
-                fecha: 29,
-                mañana1: "SEQUEIRA",
-                mañana2: "LOVERA",
-                noche1: "OJEDA",
-                noche2: "COCUCCI",
-                especial: "Por asignar",
-                supervisor: "Por asignar"
-            },
-            {
-                dia: "Martes",
-                fecha: 30,
-                mañana1: "LOPEZ",
-                mañana2: "ATENCIO",
-                noche1: "MANSILLA",
-                noche2: "ALEGRE",
-                especial: "CIRIGLIANO",
-                supervisor: "Por asignar"
-            }
+            { dia:"Lunes",     fecha:1,  mañana1:"SEQUEIRA",  mañana2:"LOVERA",   noche1:"OJEDA",    noche2:"ORTIZ",    especial:"LOBO",            apoyo:"",           supervisor:"SCARSO" },
+            { dia:"Martes",    fecha:2,  mañana1:"SCARSO",    mañana2:"RODRIGUEZ",noche1:"VEIGA",    noche2:"VIZGARRA",especial:"ATENCIO, CIRIGLIANO", apoyo:"", supervisor:"LOBO" },
+            { dia:"Miércoles", fecha:3,  mañana1:"COCUCCI",   mañana2:"LOVERA",   noche1:"MANSILLA", noche2:"ORTIZ",    especial:"DE LEONIBUS",     apoyo:"",           supervisor:"VIZGARRA" },
+            { dia:"Jueves",    fecha:4,  mañana1:"SEQUEIRA",  mañana2:"ATENCIO",  noche1:"OJEDA",    noche2:"RODRIGUEZ",especial:"LOBO, CIRIGLIANO", apoyo:"", supervisor:"LOPEZ" },
+            { dia:"Viernes",   fecha:5,  mañana1:"VEIGA",     mañana2:"LOVERA",   noche1:"COCUCCI",  noche2:"OJEDA",    especial:"GONZALEZ L",      apoyo:"",           supervisor:"DE LEONIBUS" },
+            { dia:"Sábado",    fecha:6,  mañana1:"VIZGARRA",  mañana2:"MANSILLA", noche1:"VEIGA",    noche2:"",         especial:"DE LEONIBUS",     apoyo:"",           supervisor:"SEQUEIRA" },
+            { dia:"Domingo",   fecha:7,  mañana1:"VIZGARRA",  mañana2:"COCUCCI",  noche1:"OJEDA",    noche2:"RODRIGUEZ",especial:"LOBO",             apoyo:"",           supervisor:"MANSILLA" },
+            { dia:"Lunes",     fecha:8,  mañana1:"SEQUEIRA",  mañana2:"SCARSO",   noche1:"VEIGA",    noche2:"LOPEZ",    especial:"ATENCIO, CIRIGLIANO", apoyo:"", supervisor:"CIRIGLIANO" },
+            { dia:"Martes",    fecha:9,  mañana1:"COCUCCI",   mañana2:"LOVERA",   noche1:"MANSILLA", noche2:"ORTIZ",    especial:"DE LEONIBUS",     apoyo:"",           supervisor:"RODRIGUEZ" },
+            { dia:"Miércoles", fecha:10, mañana1:"SCARSO",    mañana2:"SEQUEIRA", noche1:"LOPEZ",    noche2:"RODRIGUEZ",especial:"LOBO, CIRIGLIANO", apoyo:"", supervisor:"COCUCCI" },
+            { dia:"Jueves",    fecha:11, mañana1:"COCUCCI",   mañana2:"VEIGA",    noche1:"VIZGARRA", noche2:"ORTIZ",    especial:"GONZALEZ L",      apoyo:"",           supervisor:"OJEDA" },
+            { dia:"Viernes",   fecha:12, mañana1:"ATENCIO",   mañana2:"MANSILLA", noche1:"ALEGRE",   noche2:"VEIGA",    especial:"DE LEONIBUS, CIRIGLIANO", apoyo:"", supervisor:"VEIGA" },
+            { dia:"Sábado",    fecha:13, mañana1:"SEQUEIRA",  mañana2:"VIZGARRA", noche1:"RODRIGUEZ",noche2:"LOPEZ",    especial:"LOBO",             apoyo:"",           supervisor:"ALEGRE" },
+            { dia:"Domingo",   fecha:14, mañana1:"SCARSO",    mañana2:"ORTIZ",    noche1:"VEIGA",    noche2:"ALEGRE",   especial:"ATENCIO",          apoyo:"",           supervisor:"ATENCIO" },
+            { dia:"Lunes",     fecha:15, mañana1:"COCUCCI",   mañana2:"LOVERA",   noche1:"MANSILLA", noche2:"ORTIZ",    especial:"DE LEONIBUS",      apoyo:"",           supervisor:"ORTIZ" },
+            { dia:"Martes",    fecha:16, mañana1:"SEQUEIRA",  mañana2:"SCARSO",   noche1:"LOPEZ",    noche2:"ALEGRE",   especial:"LOBO, CIRIGLIANO", apoyo:"", supervisor:"LOVERA" },
+            { dia:"Miércoles", fecha:17, mañana1:"COCUCCI",   mañana2:"LOVERA",   noche1:"VEIGA",    noche2:"ORTIZ",    especial:"154",              apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Jueves",    fecha:18, mañana1:"LOPEZ",     mañana2:"ATENCIO",  noche1:"ALEGRE",   noche2:"RODRIGUEZ",especial:"CIRIGLIANO",       apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Viernes",   fecha:19, mañana1:"SEQUEIRA",  mañana2:"MANSILLA", noche1:"LOVERA",   noche2:"ORTIZ",    especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Sábado",    fecha:20, mañana1:"SCARSO",    mañana2:"VIZGARRA", noche1:"VEIGA",    noche2:"ALEGRE",   especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Domingo",   fecha:21, mañana1:"MANSILLA",  mañana2:"ORTIZ",    noche1:"VIZGARRA", noche2:"ALEGRE",   especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Lunes",     fecha:22, mañana1:"LOPEZ",     mañana2:"RODRIGUEZ",noche1:"OJEDA",    noche2:"SCARSO",   especial:"CIRIGLIANO",       apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Martes",    fecha:23, mañana1:"COCUCCI",   mañana2:"LOVERA",   noche1:"VEIGA",    noche2:"OJEDA",    especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Miércoles", fecha:24, mañana1:"LOPEZ",     mañana2:"ATENCIO",  noche1:"MANSILLA", noche2:"SCARSO",   especial:"CIRIGLIANO",       apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Jueves",    fecha:25, mañana1:"SEQUEIRA",  mañana2:"LOVERA",   noche1:"OJEDA",    noche2:"VIZGARRA", especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Viernes",   fecha:26, mañana1:"LOPEZ",     mañana2:"RODRIGUEZ",noche1:"ALEGRE",   noche2:"SCARSO",   especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Sábado",    fecha:27, mañana1:"COCUCCI",   mañana2:"RODRIGUEZ",noche1:"MANSILLA", noche2:"VIZGARRA", especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Domingo",   fecha:28, mañana1:"SCARSO",    mañana2:"ORTIZ",    noche1:"ALEGRE",   noche2:"OJEDA",    especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Lunes",     fecha:29, mañana1:"SEQUEIRA",  mañana2:"LOVERA",   noche1:"OJEDA",    noche2:"COCUCCI",  especial:"Por asignar",      apoyo:"",           supervisor:"Por asignar" },
+            { dia:"Martes",    fecha:30, mañana1:"LOPEZ",     mañana2:"ATENCIO",  noche1:"MANSILLA", noche2:"ALEGRE",   especial:"CIRIGLIANO",       apoyo:"",           supervisor:"Por asignar" }
         ];
 
         const choferesData = [
-            {
-                dia: "Lunes",
-                fecha: 1,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "CHARON",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Martes",
-                fecha: 2,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CARREÑO",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 3,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "CARREÑO",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Jueves",
-                fecha: 4,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "CHARON",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Viernes",
-                fecha: 5,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CHARON",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Sábado",
-                fecha: 6,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "CARREÑO",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Domingo",
-                fecha: 7,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "CHARON",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Lunes",
-                fecha: 8,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CHARON",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Martes",
-                fecha: 9,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "CARREÑO",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 10,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "CHARON",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Jueves",
-                fecha: 11,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CHARON",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Viernes",
-                fecha: 12,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "CARREÑO",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Sábado",
-                fecha: 13,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "CHARON",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Domingo",
-                fecha: 14,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CARREÑO",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Lunes",
-                fecha: 15,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "NARVAEZ",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Martes",
-                fecha: 16,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "NARVAEZ",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 17,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CARREÑO",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Jueves",
-                fecha: 18,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "NARVAEZ",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Viernes",
-                fecha: 19,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "NARVAEZ",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Sábado",
-                fecha: 20,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CARREÑO",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Domingo",
-                fecha: 21,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "NARVAEZ",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Lunes",
-                fecha: 22,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "CHARON",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Martes",
-                fecha: 23,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CARREÑO",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Miércoles",
-                fecha: 24,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "NARVAEZ",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Jueves",
-                fecha: 25,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "NARVAEZ",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Viernes",
-                fecha: 26,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CHARON",
-                custodia4: "ACEVEDO"
-            },
-            {
-                dia: "Sábado",
-                fecha: 27,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "NARVAEZ",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Domingo",
-                fecha: 28,
-                custodia1: "ALMIRON",
-                custodia2: "ROBLEDO",
-                custodia3: "NARVAEZ",
-                custodia4: "FURFARO"
-            },
-            {
-                dia: "Lunes",
-                fecha: 29,
-                custodia1: "FERNANDEZ",
-                custodia2: "FERRER",
-                custodia3: "CARREÑO",
-                custodia4: "ACOSTA"
-            },
-            {
-                dia: "Martes",
-                fecha: 30,
-                custodia1: "PAZ",
-                custodia2: "PIANELLI",
-                custodia3: "NARVAEZ",
-                custodia4: "ACEVEDO"
-            }
+            { dia:"Lunes",     fecha:1,  custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"CHARON",   custodia4:"ACOSTA" },
+            { dia:"Martes",    fecha:2,  custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CARREÑO",  custodia4:"FURFARO" },
+            { dia:"Miércoles", fecha:3,  custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"CARREÑO",  custodia4:"ACOSTA" },
+            { dia:"Jueves",    fecha:4,  custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"CHARON",   custodia4:"ACEVEDO" },
+            { dia:"Viernes",   fecha:5,  custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CHARON",   custodia4:"ACOSTA" },
+            { dia:"Sábado",    fecha:6,  custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"CARREÑO",  custodia4:"ACEVEDO" },
+            { dia:"Domingo",   fecha:7,  custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"CHARON",   custodia4:"ACEVEDO" },
+            { dia:"Lunes",     fecha:8,  custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CHARON",   custodia4:"FURFARO" },
+            { dia:"Martes",    fecha:9,  custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"CARREÑO",  custodia4:"ACOSTA" },
+            { dia:"Miércoles", fecha:10, custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"CHARON",   custodia4:"FURFARO" },
+            { dia:"Jueves",    fecha:11, custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CHARON",   custodia4:"ACOSTA" },
+            { dia:"Viernes",   fecha:12, custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"CARREÑO",  custodia4:"ACEVEDO" },
+            { dia:"Sábado",    fecha:13, custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"CHARON",   custodia4:"FURFARO" },
+            { dia:"Domingo",   fecha:14, custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CARREÑO",  custodia4:"FURFARO" },
+            { dia:"Lunes",     fecha:15, custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"NARVAEZ",  custodia4:"ACOSTA" },
+            { dia:"Martes",    fecha:16, custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"NARVAEZ",  custodia4:"FURFARO" },
+            { dia:"Miércoles", fecha:17, custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CARREÑO",  custodia4:"ACOSTA" },
+            { dia:"Jueves",    fecha:18, custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"NARVAEZ",  custodia4:"ACEVEDO" },
+            { dia:"Viernes",   fecha:19, custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"NARVAEZ",  custodia4:"ACOSTA" },
+            { dia:"Sábado",    fecha:20, custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CARREÑO",  custodia4:"ACEVEDO" },
+            { dia:"Domingo",   fecha:21, custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"NARVAEZ",  custodia4:"ACEVEDO" },
+            { dia:"Lunes",     fecha:22, custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"CHARON",   custodia4:"FURFARO" },
+            { dia:"Martes",    fecha:23, custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CARREÑO",  custodia4:"ACOSTA" },
+            { dia:"Miércoles", fecha:24, custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"NARVAEZ",  custodia4:"ACEVEDO" },
+            { dia:"Jueves",    fecha:25, custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"NARVAEZ",  custodia4:"ACOSTA" },
+            { dia:"Viernes",   fecha:26, custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CHARON",   custodia4:"ACEVEDO" },
+            { dia:"Sábado",    fecha:27, custodia1:"PAZ",       custodia2:"PIANELLI", custodia3:"NARVAEZ",  custodia4:"FURFARO" },
+            { dia:"Domingo",   fecha:28, custodia1:"ALMIRON",   custodia2:"ROBLEDO",  custodia3:"NARVAEZ",  custodia4:"FURFARO" },
+            { dia:"Lunes",     fecha:29, custodia1:"FERNANDEZ", custodia2:"FERRER",   custodia3:"CARREÑO",  custodia4:"ACOSTA" },
+            { dia:"Martes",    fecha:30, custodia1:"Paz",       custodia2:"PIANELLI", custodia3:"NARVAEZ",  custodia4:"ACEVEDO" }
         ];
 
         const personalCabinaData = [
-            {
-                nombre: "SCARSO",
-                jerarquia: "Subinspector",
-                guardias: "12x36 IMPAR",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir días pares. No disponible: 7, 27. Licencia: 29/09 - 06/10."
-            },
-            {
-                nombre: "LOBO",
-                jerarquia: "Subinspector",
-                guardias: "24x48",
-                disponibilidad: "disponible",
-                notas: "Días: 2,5,8,11,14,17,20,23,26,29. El 18 solo noche."
-            },
-            {
-                nombre: "VIZGARRA",
-                jerarquia: "Ayudante",
-                guardias: "Día/Noche",
-                disponibilidad: "parcial",
-                notas: "Día/Noche: 6,7,13,14,20,21,27,28. Solo noche: 4,5,11,12,18,19,25,26,29,30. Cursa L, M, M."
-            },
-            {
-                nombre: "LOVERA",
-                jerarquia: "Ayudante",
-                guardias: "12x36",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir de noche. 6 y 7 no. Curso instructor de tiro de día."
-            },
-            {
-                nombre: "COCUCCI",
-                jerarquia: "Ayudante",
-                guardias: "12x36 IMPAR",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir: 07-19h: 2,6,8,10,14,18,22,26,27. 19-07h: 2,4,7,13,18,26,28."
-            },
-            {
-                nombre: "ORTIZ",
-                jerarquia: "Agente",
-                guardias: "12x36",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir de noche. 6 y 7 no. Curso instructor de tiro de día."
-            },
-            {
-                nombre: "OJEDA",
-                jerarquia: "Cabo 1°",
-                guardias: "24x48",
-                disponibilidad: "disponible",
-                notas: "Guardias: 03-06-21-24-27 y 30. L/A del 08 al 20/09."
-            },
-            {
-                nombre: "VEIGA",
-                jerarquia: "Cabo 1°",
-                guardias: "24x48",
-                disponibilidad: "disponible",
-                notas: "Guardias: 1,4,7,10,13,16,19,22. L/A del 25 al 01/10."
-            },
-            {
-                nombre: "ATENCIO",
-                jerarquia: "Cabo",
-                guardias: "12x36 IMPAR",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir pares. No el 7-10-13."
-            },
-            {
-                nombre: "RODRIGUEZ",
-                jerarquia: "Sargento",
-                guardias: "12x36 IMPAR",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir pares. No el 1,4."
-            },
-            {
-                nombre: "DE LEONIBUS",
-                jerarquia: "Suboficial Auxiliar",
-                guardias: "24x48",
-                disponibilidad: "disponible",
-                notas: "Guardias: 2-5-8-11-14-17-20-23-26-29."
-            },
-            {
-                nombre: "MANSILLA",
-                jerarquia: "Sargento 1°",
-                guardias: "24x48",
-                disponibilidad: "disponible",
-                notas: "Guardias: 2,5,8,11,14,17,20,23,26,29. El 18 solo noche."
-            },
-            {
-                nombre: "CIRIGLIANO",
-                jerarquia: "Sargento 1°",
-                guardias: "12x36 IMPAR",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir pares. Del 1 al 6 curso SYC. 7 votación. 20 capacitación."
-            },
-            {
-                nombre: "LOPEZ",
-                jerarquia: "Ayudante",
-                guardias: "12x36 IMPAR",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir pares. No el 12, lunes, miércoles y jueves."
-            },
-            {
-                nombre: "ALEGRE",
-                jerarquia: "Cabo",
-                guardias: "12x36 IMPAR",
-                disponibilidad: "disponible",
-                notas: "Puede cubrir pares. No el 12, lunes, miércoles y jueves."
-            },
-            {
-                nombre: "GONZALEZ L",
-                jerarquia: "Suboficial Auxiliar",
-                guardias: "24x48",
-                disponibilidad: "disponible",
-                notas: "Guardias: 2-5-8-11-14-17-20-23-26-29."
-            }
+            { nombre:"SCARSO",     jerarquia:"Subinspector",       guardias:"12x36 IMPAR", disponibilidad:"disponible", notas:"Puede cubrir días pares. No disponible: 7, 27. Licencia: 29/09 - 06/10." },
+            { nombre:"LOBO",       jerarquia:"Subinspector",       guardias:"24x48",       disponibilidad:"disponible", notas:"Días: 2,5,8,11,14,17,20,23,26,29. El 18 solo noche." },
+            { nombre:"VIZGARRA",   jerarquia:"Ayudante",           guardias:"Día/Noche",   disponibilidad:"parcial",    notas:"Día/Noche: 6,7,13,14,20,21,27,28. Solo noche: 4,5,11,12,18,19,25,26,29,30. Cursa L, M, M." },
+            { nombre:"LOVERA",     jerarquia:"Ayudante",           guardias:"12x36",       disponibilidad:"disponible", notas:"Puede cubrir de noche. 6 y 7 no. Curso instructor de tiro de día." },
+            { nombre:"COCUCCI",    jerarquia:"Ayudante",           guardias:"12x36 IMPAR", disponibilidad:"disponible", notas:"Puede cubrir: 07-19h: 2,6,8,10,14,18,22,26,27. 19-07h: 2,4,7,13,18,26,28." },
+            { nombre:"ORTIZ",      jerarquia:"Agente",             guardias:"12x36",       disponibilidad:"disponible", notas:"Puede cubrir de noche. 6 y 7 no. Curso instructor de tiro de día." },
+            { nombre:"OJEDA",      jerarquia:"Cabo 1°",            guardias:"24x48",       disponibilidad:"disponible", notas:"Guardias: 03-06-21-24-27 y 30. L/A del 08 al 20/09." },
+            { nombre:"VEIGA",      jerarquia:"Cabo 1°",            guardias:"24x48",       disponibilidad:"disponible", notas:"Guardias: 1,4,7,10,13,16,19,22. L/A del 25 al 01/10." },
+            { nombre:"ATENCIO",    jerarquia:"Cabo",               guardias:"12x36 IMPAR", disponibilidad:"disponible", notas:"Puede cubrir pares. No el 7-10-13." },
+            { nombre:"RODRIGUEZ",  jerarquia:"Sargento",           guardias:"12x36 IMPAR", disponibilidad:"disponible", notas:"Puede cubrir pares. No el 1,4." },
+            { nombre:"DE LEONIBUS",jerarquia:"Suboficial Auxiliar",guardias:"24x48",       disponibilidad:"disponible", notas:"Guardias: 2-5-8-11-14-17-20-23-26-29." },
+            { nombre:"MANSILLA",   jerarquia:"Sargento 1°",        guardias:"24x48",       disponibilidad:"disponible", notas:"Guardias: 2,5,8,11,14,17,20,23,26,29. El 18 solo noche." },
+            { nombre:"CIRIGLIANO", jerarquia:"Sargento 1°",        guardias:"12x36 IMPAR", disponibilidad:"disponible", notas:"Puede cubrir pares. Del 1 al 6 curso SYC. 7 votación. 20 capacitación." },
+            { nombre:"LOPEZ",      jerarquia:"Ayudante",           guardias:"12x36 IMPAR", disponibilidad:"disponible", notas:"Puede cubrir pares. No el 12, lunes, miércoles y jueves." },
+            { nombre:"ALEGRE",     jerarquia:"Cabo",               guardias:"12x36 IMPAR", disponibilidad:"disponible", notas:"Puede cubrir pares. No el 12, lunes, miércoles y jueves." },
+            { nombre:"GONZALEZ L", jerarquia:"Suboficial Auxiliar",guardias:"24x48",       disponibilidad:"disponible", notas:"Guardias: 2-5-8-11-14-17-20-23-26-29." }
         ];
 
         const personalChoferesData = [
-            {
-                nombre: "ALMIRON",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 1",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Sra. Amalia. Días libres: 6, 13-30."
-            },
-            {
-                nombre: "ROBLEDO",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 2",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Isabella. Guardias: 3-6-9-12-15-18-21-24-27-30."
-            },
-            {
-                nombre: "FERNANDEZ",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 1",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Sra. Amalia. Guardias: 1-4-7-10-13-16-19-22-25-28."
-            },
-            {
-                nombre: "FERRER",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 2",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Isabella. Guardias: 1-4-7-10-13-16-19-22-25-28."
-            },
-            {
-                nombre: "PAZ",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 3",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Angelina. Guardias: 2-5-8-11-14-17-20-23-26-29. Libre: 6."
-            },
-            {
-                nombre: "PIANELLI",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 2",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Isabella. Días libres: 6, 13-30."
-            },
-            {
-                nombre: "CHARON",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 1",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Sra. Amalia. Guardias: 3-6-9-12-15-18-21-24-27-30."
-            },
-            {
-                nombre: "CARREÑO",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 3",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Angelina. Guardias: 1-4-7-10-13-16-19-22-25-28."
-            },
-            {
-                nombre: "ACOSTA",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 4",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Valentino. Guardias: 2-5-8-11-14-17-20-23-26-29. 12x36 PARES L a V."
-            },
-            {
-                nombre: "ACEVEDO",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 4",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Valentino. 12x36 IMPARES L a V."
-            },
-            {
-                nombre: "FURFARO",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 4",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Valentino. 12x36 IMPARES L a V."
-            },
-            {
-                nombre: "NARVAEZ",
-                jerarquia: "Chofer",
-                guardias: "CUSTODIA 3",
-                disponibilidad: "disponible",
-                notas: "Asignado a custodia Angelina. Guardias: 2-5-8-11-14-17-20-23-26-29."
-            }
+            { nombre:"ALMIRON",   jerarquia:"Chofer", guardias:"CUSTODIA 1", disponibilidad:"disponible", notas:"Asignado a custodia Sra. Amalia. Días libres: 6, 13-30." },
+            { nombre:"ROBLEDO",   jerarquia:"Chofer", guardias:"CUSTODIA 2", disponibilidad:"disponible", notas:"Asignado a custodia Isabella. Guardias: 3-6-9-12-15-18-21-24-27-30." },
+            { nombre:"FERNANDEZ", jerarquia:"Chofer", guardias:"CUSTODIA 1", disponibilidad:"disponible", notas:"Asignado a custodia Sra. Amalia. Guardias: 1-4-7-10-13-16-19-22-25-28." },
+            { nombre:"FERRER",    jerarquia:"Chofer", guardias:"CUSTODIA 2", disponibilidad:"disponible", notas:"Asignado a custodia Isabella. Guardias: 1-4-7-10-13-16-19-22-25-28." },
+            { nombre:"PAZ",       jerarquia:"Chofer", guardias:"CUSTODIA 3", disponibilidad:"disponible", notas:"Asignado a custodia Angelina. Guardias: 2-5-8-11-14-17-20-23-26-29. Libre: 6." },
+            { nombre:"PIANELLI",  jerarquia:"Chofer", guardias:"CUSTODIA 2", disponibilidad:"disponible", notas:"Asignado a custodia Isabella. Días libres: 6, 13-30." },
+            { nombre:"CHARON",    jerarquia:"Chofer", guardias:"CUSTODIA 1", disponibilidad:"disponible", notas:"Asignado a custodia Sra. Amalia. Guardias: 3-6-9-12-15-18-21-24-27-30." },
+            { nombre:"CARREÑO",   jerarquia:"Chofer", guardias:"CUSTODIA 3", disponibilidad:"disponible", notas:"Asignado a custodia Angelina. Guardias: 1-4-7-10-13-16-19-22-25-28." },
+            { nombre:"ACOSTA",    jerarquia:"Chofer", guardias:"CUSTODIA 4", disponibilidad:"disponible", notas:"Asignado a custodia Valentino. Guardias: 2-5-8-11-14-17-20-23-26-29. 12x36 PARES L a V." },
+            { nombre:"ACEVEDO",   jerarquia:"Chofer", guardias:"CUSTODIA 4", disponibilidad:"disponible", notas:"Asignado a custodia Valentino. 12x36 IMPARES L a V." },
+            { nombre:"FURFARO",   jerarquia:"Chofer", guardias:"CUSTODIA 4", disponibilidad:"disponible", notas:"Asignado a custodia Valentino. 12x36 IMPARES L a V." },
+            { nombre:"NARVAEZ",   jerarquia:"Chofer", guardias:"CUSTODIA 3", disponibilidad:"disponible", notas:"Asignado a custodia Angelina. Guardias: 2-5-8-11-14-17-20-23-26-29." }
         ];
 
         const coverageData = [
-            {
-                semana: "1 (1-7)",
-                diasCubiertos: "7/7",
-                incidentes: 0,
-                acciones: "Ninguna"
-            },
-            {
-                semana: "2 (8-14)",
-                diasCubiertos: "6/7",
-                incidentes: 1,
-                acciones: "Cubrir día 12 (turno noche)"
-            },
-            {
-                semana: "3 (15-21)",
-                diasCubiertos: "7/7",
-                incidentes: 0,
-                acciones: "Ninguna"
-            },
-            {
-                semana: "4 (22-30)",
-                diasCubiertos: "6/7",
-                incidentes: 2,
-                acciones: "Cubrir días 27 y 28"
-            }
+            { semana:"1 (1-7)",  diasCubiertos:"7/7", incidentes:0, acciones:"Ninguna" },
+            { semana:"2 (8-14)", diasCubiertos:"6/7", incidentes:1, acciones:"Cubrir día 12 (turno noche)" },
+            { semana:"3 (15-21)",diasCubiertos:"7/7", incidentes:0, acciones:"Ninguna" },
+            { semana:"4 (22-30)",diasCubiertos:"6/7", incidentes:2, acciones:"Cubrir días 27 y 28" }
         ];
 
         const importantNotes = [
@@ -1505,7 +685,7 @@
             evt.currentTarget.classList.add("active");
         }
 
-        // Función para cargar la tabla de turnos
+        // Función para cargar la tabla de turnos (AHORA incluye Chofer de Apoyo)
         function loadTurnosTable() {
             const tableBody = document.querySelector("#turnos-table tbody");
             tableBody.innerHTML = ''; // Limpiar tabla antes de cargar
@@ -1519,13 +699,14 @@
                 }
                 
                 row.innerHTML = `
-                    <td>${dia.dia}</td>
-                    <td>${dia.fecha}</td>
-                    <td class="turno-mañana editable" contenteditable="false">${dia.mañana1}</td>
-                    <td class="turno-mañana editable" contenteditable="false">${dia.mañana2}</td>
-                    <td class="turno-noche editable" contenteditable="false">${dia.noche1}</td>
-                    <td class="turno-noche editable" contenteditable="false">${dia.noche2}</td>
-                    <td class="turno-especial editable" contenteditable="false">${dia.especial}</td>
+                    <td>\${dia.dia}</td>
+                    <td>\${dia.fecha}</td>
+                    <td class="turno-mañana editable" contenteditable="false">\${dia.mañana1}</td>
+                    <td class="turno-mañana editable" contenteditable="false">\${dia.mañana2}</td>
+                    <td class="turno-noche editable" contenteditable="false">\${dia.noche1}</td>
+                    <td class="turno-noche editable" contenteditable="false">\${dia.noche2}</td>
+                    <td class="turno-especial editable" contenteditable="false">\${dia.especial}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">\${dia.apoyo || ""}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -1541,12 +722,12 @@
                 const row = document.createElement("tr");
                 
                 row.innerHTML = `
-                    <td>${dia.dia}</td>
-                    <td>${dia.fecha}</td>
-                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia1}</td>
-                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia2}</td>
-                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia3}</td>
-                    <td class="turno-refuerzo editable" contenteditable="false">${dia.custodia4}</td>
+                    <td>\${dia.dia}</td>
+                    <td>\${dia.fecha}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">\${dia.custodia1}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">\${dia.custodia2}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">\${dia.custodia3}</td>
+                    <td class="turno-refuerzo editable" contenteditable="false">\${dia.custodia4}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -1568,11 +749,11 @@
                                   persona.disponibilidad === "parcial" ? "Parcial" : "No disponible";
                 
                 row.innerHTML = `
-                    <td><strong>${persona.nombre}</strong></td>
-                    <td class="editable" contenteditable="false">${persona.jerarquia}</td>
-                    <td class="editable" contenteditable="false">${persona.guardias}</td>
-                    <td><span class="status ${statusClass}">${statusText}</span></td>
-                    <td class="editable" contenteditable="false">${persona.notas}</td>
+                    <td><strong>\${persona.nombre}</strong></td>
+                    <td class="editable" contenteditable="false">\${persona.jerarquia}</td>
+                    <td class="editable" contenteditable="false">\${persona.guardias}</td>
+                    <td><span class="status \${statusClass}">\${statusText}</span></td>
+                    <td class="editable" contenteditable="false">\${persona.notas}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -1594,11 +775,11 @@
                                   persona.disponibilidad === "parcial" ? "Parcial" : "No disponible";
                 
                 row.innerHTML = `
-                    <td><strong>${persona.nombre}</strong></td>
-                    <td class="editable" contenteditable="false">${persona.jerarquia}</td>
-                    <td class="editable" contenteditable="false">${persona.guardias}</td>
-                    <td><span class="status ${statusClass}">${statusText}</span></td>
-                    <td class="editable" contenteditable="false">${persona.notas}</td>
+                    <td><strong>\${persona.nombre}</strong></td>
+                    <td class="editable" contenteditable="false">\${persona.jerarquia}</td>
+                    <td class="editable" contenteditable="false">\${persona.guardias}</td>
+                    <td><span class="status \${statusClass}">\${statusText}</span></td>
+                    <td class="editable" contenteditable="false">\${persona.notas}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -1619,10 +800,10 @@
                 }
                 
                 row.innerHTML = `
-                    <td>${semana.semana}</td>
-                    <td>${semana.diasCubiertos}</td>
-                    <td>${semana.incidentes}</td>
-                    <td class="editable" contenteditable="false">${semana.acciones}</td>
+                    <td>\${semana.semana}</td>
+                    <td>\${semana.diasCubiertos}</td>
+                    <td>\${semana.incidentes}</td>
+                    <td class="editable" contenteditable="false">\${semana.acciones}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -1665,7 +846,6 @@
                 editIcon.textContent = '✏️';
                 editText.textContent = 'Editar';
                 
-                // Aquí podrías agregar código para guardar los cambios
                 alert('Cambios guardados correctamente');
             }
         }
@@ -1764,7 +944,7 @@
                 }
                 
                 // Guardar el PDF
-                const fileName = `Cronograma_Cabina_Septiembre_2025_${new Date().toISOString().split('T')[0]}.pdf`;
+                const fileName = `Cronograma_Cabina_Septiembre_2025_\${new Date().toISOString().split('T')[0]}.pdf`;
                 pdf.save(fileName);
                 
                 // Mostrar mensaje de éxito
@@ -1782,7 +962,6 @@
 
         // Inicializar la aplicación cuando el DOM esté cargado
         document.addEventListener("DOMContentLoaded", function() {
-            // Cargar todas las tablas
             loadTurnosTable();
             loadChoferesTable();
             loadPersonalCabinaTable();
@@ -1793,3 +972,7 @@
     </script>
 </body>
 </html>
+"""
+with open('/mnt/data/cronograma_apoyo.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+print("Archivo generado en /mnt/data/cronograma_apoyo.html")
